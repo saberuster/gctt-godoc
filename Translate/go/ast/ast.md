@@ -1,13 +1,16 @@
 version: 1.9.2
+
 ## package ast
 
   `import "go/ast"`
 
-## Overview
+## 概述
 
 Package ast declares the types used to represent syntax trees for Go packages.
 
-## Index
+ast 包声明一些用来表示 Go 包中语法树的类型。
+
+## 索引
 
 - [func FileExports(src *File) bool](#FileExports)
 - [func FilterDecl(decl Decl, f Filter) bool](#FilterDecl)
@@ -221,17 +224,22 @@ Package ast declares the types used to represent syntax trees for Go packages.
   - [func (s *ValueSpec) Pos() token.Pos](#ValueSpec.Pos)
 - [type Visitor](#Visitor)
 
-### Examples
+### 例子
 
 - [CommentMap](#exampleCommentMap)
 - [Inspect](#exampleInspect)
 - [Print](#examplePrint)
 
-### Package files
+### 文件
+
  [ast.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go) [commentmap.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go) [filter.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go) [import.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/import.go) [print.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/print.go) [resolve.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/resolve.go) [scope.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go) [walk.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/walk.go)
 
 <h2 id="FileExports">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L18">FileExports</a>
-    <a href="#FileExports">¶</a></h2>
+
+```
+<a href="#FileExports">¶</a></h2>
+```
+
 <pre>func FileExports(src *<a href="#File">File</a>) <a href="/builtin/#bool">bool</a></pre>
 
 FileExports trims the AST for a Go source file in place such that only exported
@@ -240,20 +248,33 @@ associated information (such as type, initial value, or function body) are
 removed. Non-exported fields and methods of exported types are stripped. The
 File.Comments list is not changed.
 
+FileExports 只保留 Go 源文件的 AST（抽象语法树）中的导出部分。所有顶级的未导出的顶级标识符和他们的相关信息都会被移除。类型中没有导出的字段和方法与导出的方法会被分离。File.Comments 列表不会改变。
+
 FileExports reports whether there are exported declarations.
+FileExports 判断是否有导出声明。
 
 <h2 id="FilterDecl">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L194">FilterDecl</a>
-    <a href="#FilterDecl">¶</a></h2>
+
+```
+<a href="#FilterDecl">¶</a></h2>
+```
+
 <pre>func FilterDecl(decl <a href="#Decl">Decl</a>, f <a href="#Filter">Filter</a>) <a href="/builtin/#bool">bool</a></pre>
 
 FilterDecl trims the AST for a Go declaration in place by removing all names
 (including struct field and interface method names, but not from parameter
 lists) that don't pass through the filter f.
+FilterDecl 会移除不能满足过滤器 f 的 AST 声明（包括结构体字段，接口方法名称但不包括参数列表）。
 
 FilterDecl reports whether there are any declared names left after filtering.
+FilterDecl 判断是否有能满足过滤器的声明存在。
 
 <h2 id="FilterFile">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L219">FilterFile</a>
-    <a href="#FilterFile">¶</a></h2>
+
+```
+<a href="#FilterFile">¶</a></h2>
+```
+
 <pre>func FilterFile(src *<a href="#File">File</a>, f <a href="#Filter">Filter</a>) <a href="/builtin/#bool">bool</a></pre>
 
 FilterFile trims the AST for a Go file in place by removing all names from
@@ -261,12 +282,19 @@ top-level declarations (including struct field and interface method names, but
 not from parameter lists) that don't pass through the filter f. If the
 declaration is empty afterwards, the declaration is removed from the AST. Import
 declarations are always removed. The File.Comments list is not changed.
+FilterFile 移除不能满足 f 的 AST 文件（包括结构体字段，接口方法名不包括参数列表）。如果没有声明那么这个声明将会被删除。
+倒入声明总是被删除的。File.Comments 列表不会被改变。
 
 FilterFile reports whether there are any top-level declarations left after
 filtering.
+FilterFile 判断是否有顶级声明，在过滤后。
 
 <h2 id="FilterPackage">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L246">FilterPackage</a>
-    <a href="#FilterPackage">¶</a></h2>
+
+```
+<a href="#FilterPackage">¶</a></h2>
+```
+
 <pre>func FilterPackage(pkg *<a href="#Package">Package</a>, f <a href="#Filter">Filter</a>) <a href="/builtin/#bool">bool</a></pre>
 
 FilterPackage trims the AST for a Go package in place by removing all names from
@@ -275,195 +303,242 @@ not from parameter lists) that don't pass through the filter f. If the
 declaration is empty afterwards, the declaration is removed from the AST. The
 pkg.Files list is not changed, so that file names and top-level package comments
 don't get lost.
+FilterPackage 通过去除所有顶级声明的名字来去除这个包。如果在过滤之后声明为空。那么这个声明将会在 AST 中移除。pkg.Files 列表没有改变，所以文件名称和顶级包注释不会丢失。
 
 FilterPackage reports whether there are any top-level declarations left after
 filtering.
+FilterPackage 判断在过滤后是否还有顶级声明。
 
 <h2 id="Fprint">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/print.go#L29">Fprint</a>
-    <a href="#Fprint">¶</a></h2>
+
+```
+<a href="#Fprint">¶</a></h2>
+```
+
 <pre>func Fprint(w <a href="/io/">io</a>.<a href="/io/#Writer">Writer</a>, fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, x interface{}, f <a href="#FieldFilter">FieldFilter</a>) <a href="/builtin/#error">error</a></pre>
 
 Fprint prints the (sub-)tree starting at AST node x to w. If fset != nil,
 position information is interpreted relative to that file set. Otherwise
 positions are printed as integer values (file set specific offsets).
+Fprint 将 AST 节点 x 打印进 w。如果 fset != nil，位置信息用来解释文件集合中的关系。但是在打印的时候位置显示为一个整数值。
 
 A non-nil FieldFilter f may be provided to control the output: struct fields for
 which f(fieldname, fieldvalue) is true are printed; all others are filtered from
 the output. Unexported struct fields are never printed.
+一个不为 nil 的过滤器 f 提供以下手段来控制输出：当 f(fieldname,fieldvalue) 返回 true 的将会被打印。返回 false 的将会被忽略。没有导出的字段永远不会被输出。
 
 <h2 id="Inspect">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/walk.go#L374">Inspect</a>
-    <a href="#Inspect">¶</a></h2>
+
+```
+<a href="#Inspect">¶</a></h2>
+```
+
 <pre>func Inspect(node <a href="#Node">Node</a>, f func(<a href="#Node">Node</a>) <a href="/builtin/#bool">bool</a>)</pre>
 
 Inspect traverses an AST in depth-first order: It starts by calling f(node);
 node must not be nil. If f returns true, Inspect invokes f recursively for each
 of the non-nil children of node, followed by a call of f(nil).
+Inspect 会递归的检查 AST，当 f(node) 返回 true 时会递归的对 node 中的非 nil 子节点递归调用 f。
 
 <a id="exampleInspect"></a>
-Example:
+例:
 
-    // src is the input for which we want to inspect the AST.
-    src := `
-    package p
-    const c = 1.0
-    var X = f(3.14)*2 + c
-    `
+```
+// src is the input for which we want to inspect the AST.
+src := `
+package p
+const c = 1.0
+var X = f(3.14)*2 + c
+`
 
-    // Create the AST by parsing src.
-    fset := token.NewFileSet() // positions are relative to fset
-    f, err := parser.ParseFile(fset, "src.go", src, 0)
-    if err != nil {
-        panic(err)
+// Create the AST by parsing src.
+fset := token.NewFileSet() // positions are relative to fset
+f, err := parser.ParseFile(fset, "src.go", src, 0)
+if err != nil {
+    panic(err)
+}
+
+// Inspect the AST and print all identifiers and literals.
+ast.Inspect(f, func(n ast.Node) bool {
+    var s string
+    switch x := n.(type) {
+    case *ast.BasicLit:
+        s = x.Value
+    case *ast.Ident:
+        s = x.Name
     }
+    if s != "" {
+        fmt.Printf("%s:\t%s\n", fset.Position(n.Pos()), s)
+    }
+    return true
+})
 
-    // Inspect the AST and print all identifiers and literals.
-    ast.Inspect(f, func(n ast.Node) bool {
-        var s string
-        switch x := n.(type) {
-        case *ast.BasicLit:
-            s = x.Value
-        case *ast.Ident:
-            s = x.Name
-        }
-        if s != "" {
-            fmt.Printf("%s:\t%s\n", fset.Position(n.Pos()), s)
-        }
-        return true
-    })
-
-    // Output:
-    // src.go:2:9:	p
-    // src.go:3:7:	c
-    // src.go:3:11:	1.0
-    // src.go:4:5:	X
-    // src.go:4:9:	f
-    // src.go:4:11:	3.14
-    // src.go:4:17:	2
-    // src.go:4:21:	c
+// Output:
+// src.go:2:9:	p
+// src.go:3:7:	c
+// src.go:3:11:	1.0
+// src.go:4:5:	X
+// src.go:4:9:	f
+// src.go:4:11:	3.14
+// src.go:4:17:	2
+// src.go:4:21:	c
+```
 
 <h2 id="IsExported">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L516">IsExported</a>
-    <a href="#IsExported">¶</a></h2>
+
+```
+<a href="#IsExported">¶</a></h2>
+```
+
 <pre>func IsExported(name <a href="/builtin/#string">string</a>) <a href="/builtin/#bool">bool</a></pre>
 
 IsExported reports whether name is an exported Go symbol (that is, whether it
 begins with an upper-case letter).
+IsExported 判断该标记是不是导出的(导出字段首字母大写)。
 
 <h2 id="NotNilFilter">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/print.go#L12">NotNilFilter</a>
-    <a href="#NotNilFilter">¶</a></h2>
+
+```
+<a href="#NotNilFilter">¶</a></h2>
+```
+
 <pre>func NotNilFilter(_ <a href="/builtin/#string">string</a>, v <a href="/reflect/">reflect</a>.<a href="/reflect/#Value">Value</a>) <a href="/builtin/#bool">bool</a></pre>
 
 NotNilFilter returns true for field values that are not nil; it returns false
 otherwise.
+NotNilFilter 在字段值不是 nil 的时候返回 true 否则返回 false。
 
 <h2 id="PackageExports">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L29">PackageExports</a>
-    <a href="#PackageExports">¶</a></h2>
+
+```
+<a href="#PackageExports">¶</a></h2>
+```
+
 <pre>func PackageExports(pkg *<a href="#Package">Package</a>) <a href="/builtin/#bool">bool</a></pre>
 
 PackageExports trims the AST for a Go package in place such that only exported
 nodes remain. The pkg.Files list is not changed, so that file names and
 top-level package comments don't get lost.
+PackageExports 只保留导出的包。pkg.Files 列表不会改变，所以文件名称和顶级包注释不会丢失。
 
 PackageExports reports whether there are exported declarations; it returns false
 otherwise.
+PackageExports 判断是否有导出声明返回 true 表示导出，false 表示未导出。
 
 <h2 id="Print">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/print.go#L63">Print</a>
-    <a href="#Print">¶</a></h2>
+
+```
+<a href="#Print">¶</a></h2>
+```
+
 <pre>func Print(fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, x interface{}) <a href="/builtin/#error">error</a></pre>
 
 Print prints x to standard output, skipping nil fields. Print(fset, x) is the
 same as Fprint(os.Stdout, fset, x, NotNilFilter).
+Print 将 x 写入标准输出 nil 字段将会被跳过。Print(fset,x) 和 Fprint(os.Stdout,fset,x,NotNilFilter) 相同。
 
 <a id="examplePrint"></a>
-Example:
+例:
 
-    // src is the input for which we want to print the AST.
-    src := `
-    package main
-    func main() {
-    	println("Hello, World!")
-    }
-    `
+```
+// src is the input for which we want to print the AST.
+src := `
+package main
+func main() {
+	println("Hello, World!")
+}
+`
 
-    // Create the AST by parsing src.
-    fset := token.NewFileSet() // positions are relative to fset
-    f, err := parser.ParseFile(fset, "", src, 0)
-    if err != nil {
-        panic(err)
-    }
+// Create the AST by parsing src.
+fset := token.NewFileSet() // positions are relative to fset
+f, err := parser.ParseFile(fset, "", src, 0)
+if err != nil {
+    panic(err)
+}
 
-    // Print the AST.
-    ast.Print(fset, f)
+// Print the AST.
+ast.Print(fset, f)
 
-    // Output:
-    //      0  *ast.File {
-    //      1  .  Package: 2:1
-    //      2  .  Name: *ast.Ident {
-    //      3  .  .  NamePos: 2:9
-    //      4  .  .  Name: "main"
-    //      5  .  }
-    //      6  .  Decls: []ast.Decl (len = 1) {
-    //      7  .  .  0: *ast.FuncDecl {
-    //      8  .  .  .  Name: *ast.Ident {
-    //      9  .  .  .  .  NamePos: 3:6
-    //     10  .  .  .  .  Name: "main"
-    //     11  .  .  .  .  Obj: *ast.Object {
-    //     12  .  .  .  .  .  Kind: func
-    //     13  .  .  .  .  .  Name: "main"
-    //     14  .  .  .  .  .  Decl: *(obj @ 7)
-    //     15  .  .  .  .  }
-    //     16  .  .  .  }
-    //     17  .  .  .  Type: *ast.FuncType {
-    //     18  .  .  .  .  Func: 3:1
-    //     19  .  .  .  .  Params: *ast.FieldList {
-    //     20  .  .  .  .  .  Opening: 3:10
-    //     21  .  .  .  .  .  Closing: 3:11
-    //     22  .  .  .  .  }
-    //     23  .  .  .  }
-    //     24  .  .  .  Body: *ast.BlockStmt {
-    //     25  .  .  .  .  Lbrace: 3:13
-    //     26  .  .  .  .  List: []ast.Stmt (len = 1) {
-    //     27  .  .  .  .  .  0: *ast.ExprStmt {
-    //     28  .  .  .  .  .  .  X: *ast.CallExpr {
-    //     29  .  .  .  .  .  .  .  Fun: *ast.Ident {
-    //     30  .  .  .  .  .  .  .  .  NamePos: 4:2
-    //     31  .  .  .  .  .  .  .  .  Name: "println"
-    //     32  .  .  .  .  .  .  .  }
-    //     33  .  .  .  .  .  .  .  Lparen: 4:9
-    //     34  .  .  .  .  .  .  .  Args: []ast.Expr (len = 1) {
-    //     35  .  .  .  .  .  .  .  .  0: *ast.BasicLit {
-    //     36  .  .  .  .  .  .  .  .  .  ValuePos: 4:10
-    //     37  .  .  .  .  .  .  .  .  .  Kind: STRING
-    //     38  .  .  .  .  .  .  .  .  .  Value: "\"Hello, World!\""
-    //     39  .  .  .  .  .  .  .  .  }
-    //     40  .  .  .  .  .  .  .  }
-    //     41  .  .  .  .  .  .  .  Ellipsis: -
-    //     42  .  .  .  .  .  .  .  Rparen: 4:25
-    //     43  .  .  .  .  .  .  }
-    //     44  .  .  .  .  .  }
-    //     45  .  .  .  .  }
-    //     46  .  .  .  .  Rbrace: 5:1
-    //     47  .  .  .  }
-    //     48  .  .  }
-    //     49  .  }
-    //     50  .  Scope: *ast.Scope {
-    //     51  .  .  Objects: map[string]*ast.Object (len = 1) {
-    //     52  .  .  .  "main": *(obj @ 11)
-    //     53  .  .  }
-    //     54  .  }
-    //     55  .  Unresolved: []*ast.Ident (len = 1) {
-    //     56  .  .  0: *(obj @ 29)
-    //     57  .  }
-    //     58  }
+// Output:
+//      0  *ast.File {
+//      1  .  Package: 2:1
+//      2  .  Name: *ast.Ident {
+//      3  .  .  NamePos: 2:9
+//      4  .  .  Name: "main"
+//      5  .  }
+//      6  .  Decls: []ast.Decl (len = 1) {
+//      7  .  .  0: *ast.FuncDecl {
+//      8  .  .  .  Name: *ast.Ident {
+//      9  .  .  .  .  NamePos: 3:6
+//     10  .  .  .  .  Name: "main"
+//     11  .  .  .  .  Obj: *ast.Object {
+//     12  .  .  .  .  .  Kind: func
+//     13  .  .  .  .  .  Name: "main"
+//     14  .  .  .  .  .  Decl: *(obj @ 7)
+//     15  .  .  .  .  }
+//     16  .  .  .  }
+//     17  .  .  .  Type: *ast.FuncType {
+//     18  .  .  .  .  Func: 3:1
+//     19  .  .  .  .  Params: *ast.FieldList {
+//     20  .  .  .  .  .  Opening: 3:10
+//     21  .  .  .  .  .  Closing: 3:11
+//     22  .  .  .  .  }
+//     23  .  .  .  }
+//     24  .  .  .  Body: *ast.BlockStmt {
+//     25  .  .  .  .  Lbrace: 3:13
+//     26  .  .  .  .  List: []ast.Stmt (len = 1) {
+//     27  .  .  .  .  .  0: *ast.ExprStmt {
+//     28  .  .  .  .  .  .  X: *ast.CallExpr {
+//     29  .  .  .  .  .  .  .  Fun: *ast.Ident {
+//     30  .  .  .  .  .  .  .  .  NamePos: 4:2
+//     31  .  .  .  .  .  .  .  .  Name: "println"
+//     32  .  .  .  .  .  .  .  }
+//     33  .  .  .  .  .  .  .  Lparen: 4:9
+//     34  .  .  .  .  .  .  .  Args: []ast.Expr (len = 1) {
+//     35  .  .  .  .  .  .  .  .  0: *ast.BasicLit {
+//     36  .  .  .  .  .  .  .  .  .  ValuePos: 4:10
+//     37  .  .  .  .  .  .  .  .  .  Kind: STRING
+//     38  .  .  .  .  .  .  .  .  .  Value: "\"Hello, World!\""
+//     39  .  .  .  .  .  .  .  .  }
+//     40  .  .  .  .  .  .  .  }
+//     41  .  .  .  .  .  .  .  Ellipsis: -
+//     42  .  .  .  .  .  .  .  Rparen: 4:25
+//     43  .  .  .  .  .  .  }
+//     44  .  .  .  .  .  }
+//     45  .  .  .  .  }
+//     46  .  .  .  .  Rbrace: 5:1
+//     47  .  .  .  }
+//     48  .  .  }
+//     49  .  }
+//     50  .  Scope: *ast.Scope {
+//     51  .  .  Objects: map[string]*ast.Object (len = 1) {
+//     52  .  .  .  "main": *(obj @ 11)
+//     53  .  .  }
+//     54  .  }
+//     55  .  Unresolved: []*ast.Ident (len = 1) {
+//     56  .  .  0: *(obj @ 29)
+//     57  .  }
+//     58  }
+```
 
 <h2 id="SortImports">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/import.go#L5">SortImports</a>
-    <a href="#SortImports">¶</a></h2>
+
+```
+<a href="#SortImports">¶</a></h2>
+```
+
 <pre>func SortImports(fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, f *<a href="#File">File</a>)</pre>
 
 SortImports sorts runs of consecutive import lines in import blocks in f. It
 also removes duplicate imports when it is possible to do so without data loss.
+SortImports 会将导入行放进导入代码块并排序。他也会删除重复声明。
 
 <h2 id="Walk">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/walk.go#L41">Walk</a>
-    <a href="#Walk">¶</a></h2>
+
+```
+<a href="#Walk">¶</a></h2>
+```
+
 <pre>func Walk(v <a href="#Visitor">Visitor</a>, node <a href="#Node">Node</a>)</pre>
 
 Walk traverses an AST in depth-first order: It starts by calling v.Visit(node);
@@ -471,8 +546,14 @@ node must not be nil. If the visitor w returned by v.Visit(node) is not nil,
 Walk is invoked recursively with visitor w for each of the non-nil children of
 node, followed by a call of w.Visit(nil).
 
+Walk 穿过 AST 到达更深的序列中。最开始使用 v.Visit(node)。node 不能为空。Walk 递归的调用 visitor w 来循环每个子节点直到调用到 w.Visit(nil)。
+
 <h2 id="ArrayType">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L365">ArrayType</a>
-    <a href="#ArrayType">¶</a></h2>
+
+```
+<a href="#ArrayType">¶</a></h2>
+```
+
 <pre>type ArrayType struct {
 <span id="ArrayType.Lbrack"></span>    Lbrack <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;[&#34;</span>
 <span id="ArrayType.Len"></span>    Len    <a href="#Expr">Expr</a>      <span class="comment">// Ellipsis node for [...]T array types, nil for slice types</span>
@@ -481,18 +562,30 @@ node, followed by a call of w.Visit(nil).
 
 An ArrayType node represents an array or slice type.
 
+ArrayType  代表数组或者切片节。
+
 <h3 id="ArrayType.End">func (*ArrayType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L466">End</a>
-    <a href="#ArrayType.End">¶</a></h3>
+
+```
+<a href="#ArrayType.End">¶</a></h3>
+```
+
 <pre>func (x *<a href="#ArrayType">ArrayType</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ArrayType.Pos">func (*ArrayType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L433">Pos</a>
-    <a href="#ArrayType.Pos">¶</a></h3>
+
+```
+<a href="#ArrayType.Pos">¶</a></h3>
+```
+
 <pre>func (x *<a href="#ArrayType">ArrayType</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="AssignStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L593">AssignStmt</a>
-    <a href="#AssignStmt">¶</a></h2>
+
+```
+<a href="#AssignStmt">¶</a></h2>
+```
+
 <pre>type AssignStmt struct {
 <span id="AssignStmt.Lhs"></span>    Lhs    []<a href="#Expr">Expr</a>
 <span id="AssignStmt.TokPos"></span>    TokPos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// position of Tok</span>
@@ -502,18 +595,30 @@ An ArrayType node represents an array or slice type.
 
 An AssignStmt node represents an assignment or a short variable declaration.
 
+AssignStmt 代表一个赋值语句或者变量声明。
+
 <h3 id="AssignStmt.End">func (*AssignStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L739">End</a>
-    <a href="#AssignStmt.End">¶</a></h3>
+
+```
+<a href="#AssignStmt.End">¶</a></h3>
+```
+
 <pre>func (s *<a href="#AssignStmt">AssignStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="AssignStmt.Pos">func (*AssignStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L710">Pos</a>
-    <a href="#AssignStmt.Pos">¶</a></h3>
+
+```
+<a href="#AssignStmt.Pos">¶</a></h3>
+```
+
 <pre>func (s *<a href="#AssignStmt">AssignStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BadDecl">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L890">BadDecl</a>
-    <a href="#BadDecl">¶</a></h2>
+
+```
+<a href="#BadDecl">¶</a></h2>
+```
+
 <pre>type BadDecl struct {
 <span id="BadDecl.From"></span>    From, To <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position range of bad declaration</span>
 }</pre>
@@ -521,18 +626,30 @@ An AssignStmt node represents an assignment or a short variable declaration.
 A BadDecl node is a placeholder for declarations containing syntax errors for
 which no correct declaration nodes can be created.
 
+BadDecl 是声明的默认值，它包含一个不正确声明的语法错误。
+
 <h3 id="BadDecl.End">func (*BadDecl) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L930">End</a>
-    <a href="#BadDecl.End">¶</a></h3>
+
+```
+<a href="#BadDecl.End">¶</a></h3>
+```
+
 <pre>func (d *<a href="#BadDecl">BadDecl</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BadDecl.Pos">func (*BadDecl) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L926">Pos</a>
-    <a href="#BadDecl.Pos">¶</a></h3>
+
+```
+<a href="#BadDecl.Pos">¶</a></h3>
+```
+
 <pre>func (d *<a href="#BadDecl">BadDecl</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BadExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L223">BadExpr</a>
-    <a href="#BadExpr">¶</a></h2>
+
+```
+<a href="#BadExpr">¶</a></h2>
+```
+
 <pre>type BadExpr struct {
 <span id="BadExpr.From"></span>    From, To <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position range of bad expression</span>
 }</pre>
@@ -540,18 +657,30 @@ which no correct declaration nodes can be created.
 A BadExpr node is a placeholder for expressions containing syntax errors for
 which no correct expression nodes can be created.
 
+BadExpr 是表达式的默认值，他包含一个创建一个不正确表达式的错误。
+
 <h3 id="BadExpr.End">func (*BadExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L445">End</a>
-    <a href="#BadExpr.End">¶</a></h3>
+
+```
+<a href="#BadExpr.End">¶</a></h3>
+```
+
 <pre>func (x *<a href="#BadExpr">BadExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BadExpr.Pos">func (*BadExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L412">Pos</a>
-    <a href="#BadExpr.Pos">¶</a></h3>
+
+```
+<a href="#BadExpr.Pos">¶</a></h3>
+```
+
 <pre>func (x *<a href="#BadExpr">BadExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BadStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L544">BadStmt</a>
-    <a href="#BadStmt">¶</a></h2>
+
+```
+<a href="#BadStmt">¶</a></h2>
+```
+
 <pre>type BadStmt struct {
 <span id="BadStmt.From"></span>    From, To <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position range of bad statement</span>
 }</pre>
@@ -559,18 +688,30 @@ which no correct expression nodes can be created.
 A BadStmt node is a placeholder for statements containing syntax errors for
 which no correct statement nodes can be created.
 
+BadStmt 是语句的默认值，他包含一个没有正确创建语句的语法错误。
+
 <h3 id="BadStmt.End">func (*BadStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L725">End</a>
-    <a href="#BadStmt.End">¶</a></h3>
+
+```
+<a href="#BadStmt.End">¶</a></h3>
+```
+
 <pre>func (s *<a href="#BadStmt">BadStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BadStmt.Pos">func (*BadStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L703">Pos</a>
-    <a href="#BadStmt.Pos">¶</a></h3>
+
+```
+<a href="#BadStmt.Pos">¶</a></h3>
+```
+
 <pre>func (s *<a href="#BadStmt">BadStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BasicLit">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L243">BasicLit</a>
-    <a href="#BasicLit">¶</a></h2>
+
+```
+<a href="#BasicLit">¶</a></h2>
+```
+
 <pre>type BasicLit struct {
 <span id="BasicLit.ValuePos"></span>    ValuePos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// literal position</span>
 <span id="BasicLit.Kind"></span>    Kind     <a href="/go/token/">token</a>.<a href="/go/token/#Token">Token</a> <span class="comment">// token.INT, token.FLOAT, token.IMAG, token.CHAR, or token.STRING</span>
@@ -579,18 +720,33 @@ which no correct statement nodes can be created.
 
 A BasicLit node represents a literal of basic type.
 
+BasicLit 代表一个字面值类型。
+
 <h3 id="BasicLit.End">func (*BasicLit) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L453">End</a>
-    <a href="#BasicLit.End">¶</a></h3>
+
+```
+<a href="#BasicLit.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#BasicLit">BasicLit</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BasicLit.Pos">func (*BasicLit) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L415">Pos</a>
-    <a href="#BasicLit.Pos">¶</a></h3>
+
+```
+<a href="#BasicLit.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#BasicLit">BasicLit</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BinaryExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L332">BinaryExpr</a>
-    <a href="#BinaryExpr">¶</a></h2>
+
+```
+<a href="#BinaryExpr">¶</a></h2>
+
+```
+
 <pre>type BinaryExpr struct {
 <span id="BinaryExpr.X"></span>    X     <a href="#Expr">Expr</a>        <span class="comment">// left operand</span>
 <span id="BinaryExpr.OpPos"></span>    OpPos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// position of Op</span>
@@ -600,18 +756,33 @@ A BasicLit node represents a literal of basic type.
 
 A BinaryExpr node represents a binary expression.
 
+BunaryExpr 代表一个二进制表达式。
+
 <h3 id="BinaryExpr.End">func (*BinaryExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L464">End</a>
-    <a href="#BinaryExpr.End">¶</a></h3>
+
+```
+<a href="#BinaryExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#BinaryExpr">BinaryExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BinaryExpr.Pos">func (*BinaryExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L431">Pos</a>
-    <a href="#BinaryExpr.Pos">¶</a></h3>
+
+```
+<a href="#BinaryExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#BinaryExpr">BinaryExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BlockStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L628">BlockStmt</a>
-    <a href="#BlockStmt">¶</a></h2>
+
+```
+<a href="#BlockStmt">¶</a></h2>
+
+```
+
 <pre>type BlockStmt struct {
 <span id="BlockStmt.Lbrace"></span>    Lbrace <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;{&#34;</span>
 <span id="BlockStmt.List"></span>    List   []<a href="#Stmt">Stmt</a>
@@ -620,18 +791,33 @@ A BinaryExpr node represents a binary expression.
 
 A BlockStmt node represents a braced statement list.
 
+BlockStmt 代表一个支撑语句列表。
+
 <h3 id="BlockStmt.End">func (*BlockStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L754">End</a>
-    <a href="#BlockStmt.End">¶</a></h3>
+
+```
+<a href="#BlockStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#BlockStmt">BlockStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BlockStmt.Pos">func (*BlockStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L715">Pos</a>
-    <a href="#BlockStmt.Pos">¶</a></h3>
+
+```
+<a href="#BlockStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#BlockStmt">BlockStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="BranchStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L621">BranchStmt</a>
-    <a href="#BranchStmt">¶</a></h2>
+
+```
+<a href="#BranchStmt">¶</a></h2>
+
+```
+
 <pre>type BranchStmt struct {
 <span id="BranchStmt.TokPos"></span>    TokPos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// position of Tok</span>
 <span id="BranchStmt.Tok"></span>    Tok    <a href="/go/token/">token</a>.<a href="/go/token/#Token">Token</a> <span class="comment">// keyword token (BREAK, CONTINUE, GOTO, FALLTHROUGH)</span>
@@ -640,18 +826,33 @@ A BlockStmt node represents a braced statement list.
 
 A BranchStmt node represents a break, continue, goto, or fallthrough statement.
 
+BranchStmt 代表一个 break，continue，goto，或者 fallthrough 语句。
+
 <h3 id="BranchStmt.End">func (*BranchStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L748">End</a>
-    <a href="#BranchStmt.End">¶</a></h3>
+
+```
+<a href="#BranchStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#BranchStmt">BranchStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="BranchStmt.Pos">func (*BranchStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L714">Pos</a>
-    <a href="#BranchStmt.Pos">¶</a></h3>
+
+```
+<a href="#BranchStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#BranchStmt">BranchStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="CallExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L306">CallExpr</a>
-    <a href="#CallExpr">¶</a></h2>
+
+```
+<a href="#CallExpr">¶</a></h2>
+
+```
+
 <pre>type CallExpr struct {
 <span id="CallExpr.Fun"></span>    Fun      <a href="#Expr">Expr</a>      <span class="comment">// function expression</span>
 <span id="CallExpr.Lparen"></span>    Lparen   <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;(&#34;</span>
@@ -663,17 +864,30 @@ A BranchStmt node represents a break, continue, goto, or fallthrough statement.
 A CallExpr node represents an expression followed by an argument list.
 
 <h3 id="CallExpr.End">func (*CallExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L461">End</a>
-    <a href="#CallExpr.End">¶</a></h3>
+
+```
+<a href="#CallExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#CallExpr">CallExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="CallExpr.Pos">func (*CallExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L428">Pos</a>
-    <a href="#CallExpr.Pos">¶</a></h3>
+
+```
+<a href="#CallExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#CallExpr">CallExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="CaseClause">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L644">CaseClause</a>
-    <a href="#CaseClause">¶</a></h2>
+
+```
+<a href="#CaseClause">¶</a></h2>
+
+```
+
 <pre>type CaseClause struct {
 <span id="CaseClause.Case"></span>    Case  <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;case&#34; or &#34;default&#34; keyword</span>
 <span id="CaseClause.List"></span>    List  []<a href="#Expr">Expr</a>    <span class="comment">// list of expressions or types; nil means default case</span>
@@ -683,30 +897,56 @@ A CallExpr node represents an expression followed by an argument list.
 
 A CaseClause represents a case of an expression or type switch statement.
 
+CaseClause 代表 switch 里面的一个 case 表达式。
+
 <h3 id="CaseClause.End">func (*CaseClause) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L761">End</a>
-    <a href="#CaseClause.End">¶</a></h3>
+
+```
+<a href="#CaseClause.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#CaseClause">CaseClause</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="CaseClause.Pos">func (*CaseClause) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L717">Pos</a>
-    <a href="#CaseClause.Pos">¶</a></h3>
+
+```
+<a href="#CaseClause.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#CaseClause">CaseClause</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="ChanDir">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L352">ChanDir</a>
-    <a href="#ChanDir">¶</a></h2>
+
+```
+<a href="#ChanDir">¶</a></h2>
+
+```
+
 <pre>type ChanDir <a href="/builtin/#int">int</a></pre>
 
 The direction of a channel type is indicated by one of the following constants.
 
+channel 类型的方向，可以是以下几种常量之一。
+
 <pre>const (
-    <span id="SEND">SEND</span> <a href="#ChanDir">ChanDir</a> = 1 &lt;&lt; <a href="/builtin/#iota">iota</a>
-    <span id="RECV">RECV</span>
+
+```
+<span id="SEND">SEND</span> <a href="#ChanDir">ChanDir</a> = 1 &lt;&lt; <a href="/builtin/#iota">iota</a>
+<span id="RECV">RECV</span>
+
+```
+
 )</pre>
 
-
 <h2 id="ChanType">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L402">ChanType</a>
-    <a href="#ChanType">¶</a></h2>
+
+```
+<a href="#ChanType">¶</a></h2>
+
+```
+
 <pre>type ChanType struct {
 <span id="ChanType.Begin"></span>    Begin <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;chan&#34; keyword or &#34;&lt;-&#34; (whichever comes first)</span>
 <span id="ChanType.Arrow"></span>    Arrow <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;&lt;-&#34; (token.NoPos if there is no &#34;&lt;-&#34;)</span>
@@ -716,18 +956,33 @@ The direction of a channel type is indicated by one of the following constants.
 
 A ChanType node represents a channel type.
 
+ChanType 代表一个 channel 类型。
+
 <h3 id="ChanType.End">func (*ChanType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L476">End</a>
-    <a href="#ChanType.End">¶</a></h3>
+
+```
+<a href="#ChanType.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#ChanType">ChanType</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ChanType.Pos">func (*ChanType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L443">Pos</a>
-    <a href="#ChanType.Pos">¶</a></h3>
+
+```
+<a href="#ChanType.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#ChanType">ChanType</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="CommClause">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L668">CommClause</a>
-    <a href="#CommClause">¶</a></h2>
+
+```
+<a href="#CommClause">¶</a></h2>
+
+```
+
 <pre>type CommClause struct {
 <span id="CommClause.Case"></span>    Case  <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;case&#34; or &#34;default&#34; keyword</span>
 <span id="CommClause.Comm"></span>    Comm  <a href="#Stmt">Stmt</a>      <span class="comment">// send or receive statement; nil means default case</span>
@@ -737,18 +992,33 @@ A ChanType node represents a channel type.
 
 A CommClause node represents a case of a select statement.
 
+CommClause 代表一个 select 语句。
+
 <h3 id="CommClause.End">func (*CommClause) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L769">End</a>
-    <a href="#CommClause.End">¶</a></h3>
+
+```
+<a href="#CommClause.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#CommClause">CommClause</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="CommClause.Pos">func (*CommClause) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L720">Pos</a>
-    <a href="#CommClause.Pos">¶</a></h3>
+
+```
+<a href="#CommClause.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#CommClause">CommClause</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Comment">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L52">Comment</a>
-    <a href="#Comment">¶</a></h2>
+
+```
+<a href="#Comment">¶</a></h2>
+
+```
+
 <pre>type Comment struct {
 <span id="Comment.Slash"></span>    Slash <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;/&#34; starting the comment</span>
 <span id="Comment.Text"></span>    Text  <a href="/builtin/#string">string</a>    <span class="comment">// comment text (excluding &#39;\n&#39; for //-style comments)</span>
@@ -756,18 +1026,33 @@ A CommClause node represents a case of a select statement.
 
 A Comment node represents a single //-style or /*-style comment.
 
+Comment 代表一个 // 注释或者 /* 注释。
+
 <h3 id="Comment.End">func (*Comment) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L58">End</a>
-    <a href="#Comment.End">¶</a></h3>
+
+```
+<a href="#Comment.End">¶</a></h3>
+
+```
+
 <pre>func (c *<a href="#Comment">Comment</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="Comment.Pos">func (*Comment) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L57">Pos</a>
-    <a href="#Comment.Pos">¶</a></h3>
+
+```
+<a href="#Comment.Pos">¶</a></h3>
+
+```
+
 <pre>func (c *<a href="#Comment">Comment</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="CommentGroup">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L63">CommentGroup</a>
-    <a href="#CommentGroup">¶</a></h2>
+
+```
+<a href="#CommentGroup">¶</a></h2>
+
+```
+
 <pre>type CommentGroup struct {
 <span id="CommentGroup.List"></span>    List []*<a href="#Comment">Comment</a> <span class="comment">// len(List) &gt; 0</span>
 }</pre>
@@ -775,18 +1060,33 @@ A Comment node represents a single //-style or /*-style comment.
 A CommentGroup represents a sequence of comments with no other tokens and no
 empty lines between.
 
+CommentGroup 代表一个没有其他 token 和没有空行的序列。
+
 <h3 id="CommentGroup.End">func (*CommentGroup) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L68">End</a>
-    <a href="#CommentGroup.End">¶</a></h3>
+
+```
+<a href="#CommentGroup.End">¶</a></h3>
+
+```
+
 <pre>func (g *<a href="#CommentGroup">CommentGroup</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="CommentGroup.Pos">func (*CommentGroup) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L67">Pos</a>
-    <a href="#CommentGroup.Pos">¶</a></h3>
+
+```
+<a href="#CommentGroup.Pos">¶</a></h3>
+
+```
+
 <pre>func (g *<a href="#CommentGroup">CommentGroup</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="CommentGroup.Text">func (*CommentGroup) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L86">Text</a>
-    <a href="#CommentGroup.Text">¶</a></h3>
+
+```
+<a href="#CommentGroup.Text">¶</a></h3>
+
+```
+
 <pre>func (g *<a href="#CommentGroup">CommentGroup</a>) Text() <a href="/builtin/#string">string</a></pre>
 
 Text returns the text of the comment. Comment markers (//, /*, and */), the
@@ -794,92 +1094,114 @@ first space of a line comment, and leading and trailing empty lines are removed.
 Multiple empty lines are reduced to one, and trailing space on lines is trimmed.
 Unless the result is empty, it is newline-terminated.
 
+Text 返回注释（// 或者 /* 和 */）的内容。
+
 <h2 id="CommentMap">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go#L25">CommentMap</a>
-    <a href="#CommentMap">¶</a></h2>
-<pre>type CommentMap map[<a href="#Node">Node</a>][]*<a href="#CommentGroup">CommentGroup</a></pre>
+
+```
+<a href="#CommentMap">¶</a></h2>
+
+```
+
+<pre>type CommentMap map[<a href="#Node">Node</a>][]
 
 A CommentMap maps an AST node to a list of comment groups associated with it.
 See NewCommentMap for a description of the association.
 
+CommentMap 将 AST 节点和注释组的列表联系起来。详情请看 NewCommentMap。
+
 <a id="exampleCommentMap"></a>
-Example:
+例:
 
-    // src is the input for which we create the AST that we
-    // are going to manipulate.
-    src := `
-    // This is the package comment.
-    package main
-    
-    // This comment is associated with the hello constant.
-    const hello = "Hello, World!" // line comment 1
-    
-    // This comment is associated with the foo variable.
-    var foo = hello // line comment 2 
-    
-    // This comment is associated with the main function.
-    func main() {
-    	fmt.Println(hello) // line comment 3
+```
+// src is the input for which we create the AST that we
+// are going to manipulate.
+src := `
+// This is the package comment.
+package main
+
+// This comment is associated with the hello constant.
+const hello = "Hello, World!" // line comment 1
+
+// This comment is associated with the foo variable.
+var foo = hello // line comment 2 
+
+// This comment is associated with the main function.
+func main() {
+	fmt.Println(hello) // line comment 3
+}
+`
+
+// Create the AST by parsing src.
+fset := token.NewFileSet() // positions are relative to fset
+f, err := parser.ParseFile(fset, "src.go", src, parser.ParseComments)
+if err != nil {
+    panic(err)
+}
+
+// Create an ast.CommentMap from the ast.File's comments.
+// This helps keeping the association between comments
+// and AST nodes.
+cmap := ast.NewCommentMap(fset, f, f.Comments)
+
+// Remove the first variable declaration from the list of declarations.
+for i, decl := range f.Decls {
+    if gen, ok := decl.(*ast.GenDecl); ok && gen.Tok == token.VAR {
+        copy(f.Decls[i:], f.Decls[i+1:])
+        f.Decls = f.Decls[:len(f.Decls)-1]
     }
-    `
+}
 
-    // Create the AST by parsing src.
-    fset := token.NewFileSet() // positions are relative to fset
-    f, err := parser.ParseFile(fset, "src.go", src, parser.ParseComments)
-    if err != nil {
-        panic(err)
-    }
+// Use the comment map to filter comments that don't belong anymore
+// (the comments associated with the variable declaration), and create
+// the new comments list.
+f.Comments = cmap.Filter(f).Comments()
 
-    // Create an ast.CommentMap from the ast.File's comments.
-    // This helps keeping the association between comments
-    // and AST nodes.
-    cmap := ast.NewCommentMap(fset, f, f.Comments)
+// Print the modified AST.
+var buf bytes.Buffer
+if err := format.Node(&buf, fset, f); err != nil {
+    panic(err)
+}
+fmt.Printf("%s", buf.Bytes())
 
-    // Remove the first variable declaration from the list of declarations.
-    for i, decl := range f.Decls {
-        if gen, ok := decl.(*ast.GenDecl); ok && gen.Tok == token.VAR {
-            copy(f.Decls[i:], f.Decls[i+1:])
-            f.Decls = f.Decls[:len(f.Decls)-1]
-        }
-    }
+// Output:
+// // This is the package comment.
+// package main
+//
+// // This comment is associated with the hello constant.
+// const hello = "Hello, World!" // line comment 1
+//
+// // This comment is associated with the main function.
+// func main() {
+// 	fmt.Println(hello) // line comment 3
+// }
 
-    // Use the comment map to filter comments that don't belong anymore
-    // (the comments associated with the variable declaration), and create
-    // the new comments list.
-    f.Comments = cmap.Filter(f).Comments()
-
-    // Print the modified AST.
-    var buf bytes.Buffer
-    if err := format.Node(&buf, fset, f); err != nil {
-        panic(err)
-    }
-    fmt.Printf("%s", buf.Bytes())
-
-    // Output:
-    // // This is the package comment.
-    // package main
-    //
-    // // This comment is associated with the hello constant.
-    // const hello = "Hello, World!" // line comment 1
-    //
-    // // This comment is associated with the main function.
-    // func main() {
-    // 	fmt.Println(hello) // line comment 3
-    // }
+```
 
 <h3 id="NewCommentMap">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go#L133">NewCommentMap</a>
-    <a href="#NewCommentMap">¶</a></h3>
+
+```
+<a href="#NewCommentMap">¶</a></h3>
+
+```
+
 <pre>func NewCommentMap(fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, node <a href="#Node">Node</a>, comments []*<a href="#CommentGroup">CommentGroup</a>) <a href="#CommentMap">CommentMap</a></pre>
 
 NewCommentMap creates a new comment map by associating comment groups of the
 comments list with the nodes of the AST specified by node.
 
+NewCommentMap 创建一个新的注释字典把注释组和 AST 节点联系起来。
+
 A comment group g is associated with a node n if:
 
-    - g starts on the same line as n ends
-    - g starts on the line immediately following n, and there is
-      at least one empty line after g and before the next node
-    - g starts before n and is not associated to the node before n
-      via the previous rules
+```
+- g starts on the same line as n ends
+- g starts on the line immediately following n, and there is
+  at least one empty line after g and before the next node
+- g starts before n and is not associated to the node before n
+  via the previous rules
+
+```
 
 NewCommentMap tries to associate a comment group to the "largest" node possible:
 For instance, if the comment is a line comment trailing an assignment, the
@@ -887,34 +1209,64 @@ comment is associated with the entire assignment rather than just the last
 operand in the assignment.
 
 <h3 id="CommentMap.Comments">func (CommentMap) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go#L262">Comments</a>
-    <a href="#CommentMap.Comments">¶</a></h3>
+
+```
+<a href="#CommentMap.Comments">¶</a></h3>
+
+```
+
 <pre>func (cmap <a href="#CommentMap">CommentMap</a>) Comments() []*<a href="#CommentGroup">CommentGroup</a></pre>
 
 Comments returns the list of comment groups in the comment map. The result is
 sorted in source order.
 
+Comments 返回注释字典中的注释组列表。这个结果是根据源码顺序排序的。
+
 <h3 id="CommentMap.Filter">func (CommentMap) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go#L248">Filter</a>
-    <a href="#CommentMap.Filter">¶</a></h3>
+
+```
+<a href="#CommentMap.Filter">¶</a></h3>
+
+```
+
 <pre>func (cmap <a href="#CommentMap">CommentMap</a>) Filter(node <a href="#Node">Node</a>) <a href="#CommentMap">CommentMap</a></pre>
 
 Filter returns a new comment map consisting of only those entries of cmap for
 which a corresponding node exists in the AST specified by node.
 
+Filter 返回一个新的注释字典由那些纯在于指定 AST 节点的注释成。
+
 <h3 id="CommentMap.String">func (CommentMap) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go#L307">String</a>
-    <a href="#CommentMap.String">¶</a></h3>
+
+```
+<a href="#CommentMap.String">¶</a></h3>
+
+```
+
 <pre>func (cmap <a href="#CommentMap">CommentMap</a>) String() <a href="/builtin/#string">string</a></pre>
 
-
 <h3 id="CommentMap.Update">func (CommentMap) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/commentmap.go#L236">Update</a>
-    <a href="#CommentMap.Update">¶</a></h3>
+
+```
+<a href="#CommentMap.Update">¶</a></h3>
+
+```
+
 <pre>func (cmap <a href="#CommentMap">CommentMap</a>) Update(old, new <a href="#Node">Node</a>) <a href="#Node">Node</a></pre>
 
 Update replaces an old node in the comment map with the new node and returns the
 new node. Comments that were associated with the old node are associated with
 the new node.
 
+Update 将 old 节点的注释字典换成 new 节点的。以前关联老节点的注释现在都关联新节点。
+
 <h2 id="CompositeLit">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L256">CompositeLit</a>
-    <a href="#CompositeLit">¶</a></h2>
+
+```
+<a href="#CompositeLit">¶</a></h2>
+
+```
+
 <pre>type CompositeLit struct {
 <span id="CompositeLit.Type"></span>    Type   <a href="#Expr">Expr</a>      <span class="comment">// literal type; or nil</span>
 <span id="CompositeLit.Lbrace"></span>    Lbrace <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;{&#34;</span>
@@ -924,45 +1276,87 @@ the new node.
 
 A CompositeLit node represents a composite literal.
 
+CompositeLit 代表一个复数字面值。
+
 <h3 id="CompositeLit.End">func (*CompositeLit) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L455">End</a>
-    <a href="#CompositeLit.End">¶</a></h3>
+
+```
+<a href="#CompositeLit.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#CompositeLit">CompositeLit</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="CompositeLit.Pos">func (*CompositeLit) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L417">Pos</a>
-    <a href="#CompositeLit.Pos">¶</a></h3>
+
+```
+<a href="#CompositeLit.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#CompositeLit">CompositeLit</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Decl">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L43">Decl</a>
-    <a href="#Decl">¶</a></h2>
+
+```
+<a href="#Decl">¶</a></h2>
+
+```
+
 <pre>type Decl interface {
-    <a href="#Node">Node</a>
-    <span class="comment">// contains filtered or unexported methods</span>
+
+```
+<a href="#Node">Node</a>
+<span class="comment">// contains filtered or unexported methods</span>
+
+```
+
 }</pre>
 
 All declaration nodes implement the Decl interface.
 
+所有的声明节点都实现了 Decl 接口。
+
 <h2 id="DeclStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L549">DeclStmt</a>
-    <a href="#DeclStmt">¶</a></h2>
+
+```
+<a href="#DeclStmt">¶</a></h2>
+
+```
+
 <pre>type DeclStmt struct {
 <span id="DeclStmt.Decl"></span>    Decl <a href="#Decl">Decl</a> <span class="comment">// *GenDecl with CONST, TYPE, or VAR token</span>
 }</pre>
 
 A DeclStmt node represents a declaration in a statement list.
 
+DeclStmt 代表在语句中的声明。
+
 <h3 id="DeclStmt.End">func (*DeclStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L726">End</a>
-    <a href="#DeclStmt.End">¶</a></h3>
+
+```
+<a href="#DeclStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#DeclStmt">DeclStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="DeclStmt.Pos">func (*DeclStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L704">Pos</a>
-    <a href="#DeclStmt.Pos">¶</a></h3>
+
+```
+<a href="#DeclStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#DeclStmt">DeclStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="DeferStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L607">DeferStmt</a>
-    <a href="#DeferStmt">¶</a></h2>
+
+```
+<a href="#DeferStmt">¶</a></h2>
+
+```
+
 <pre>type DeferStmt struct {
 <span id="DeferStmt.Defer"></span>    Defer <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;defer&#34; keyword</span>
 <span id="DeferStmt.Call"></span>    Call  *<a href="#CallExpr">CallExpr</a>
@@ -970,18 +1364,33 @@ A DeclStmt node represents a declaration in a statement list.
 
 A DeferStmt node represents a defer statement.
 
+DeferStmt 代表一个 defer 语句。
+
 <h3 id="DeferStmt.End">func (*DeferStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L741">End</a>
-    <a href="#DeferStmt.End">¶</a></h3>
+
+```
+<a href="#DeferStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#DeferStmt">DeferStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="DeferStmt.Pos">func (*DeferStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L712">Pos</a>
-    <a href="#DeferStmt.Pos">¶</a></h3>
+
+```
+<a href="#DeferStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#DeferStmt">DeferStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Ellipsis">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L237">Ellipsis</a>
-    <a href="#Ellipsis">¶</a></h2>
+
+```
+<a href="#Ellipsis">¶</a></h2>
+
+```
+
 <pre>type Ellipsis struct {
 <span id="Ellipsis.Ellipsis"></span>    Ellipsis <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;...&#34;</span>
 <span id="Ellipsis.Elt"></span>    Elt      <a href="#Expr">Expr</a>      <span class="comment">// ellipsis element type (parameter lists only); or nil</span>
@@ -990,18 +1399,33 @@ A DeferStmt node represents a defer statement.
 An Ellipsis node stands for the "..." type in a parameter list or the "..."
 length in an array type.
 
+Ellipsis 代表参数列表中的 "…" 或者指定数组长度里面的 "..."
+
 <h3 id="Ellipsis.End">func (*Ellipsis) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L447">End</a>
-    <a href="#Ellipsis.End">¶</a></h3>
+
+```
+<a href="#Ellipsis.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#Ellipsis">Ellipsis</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="Ellipsis.Pos">func (*Ellipsis) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L414">Pos</a>
-    <a href="#Ellipsis.Pos">¶</a></h3>
+
+```
+<a href="#Ellipsis.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#Ellipsis">Ellipsis</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="EmptyStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L557">EmptyStmt</a>
-    <a href="#EmptyStmt">¶</a></h2>
+
+```
+<a href="#EmptyStmt">¶</a></h2>
+
+```
+
 <pre>type EmptyStmt struct {
 <span id="EmptyStmt.Semicolon"></span>    Semicolon <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of following &#34;;&#34;</span>
 <span id="EmptyStmt.Implicit"></span>    Implicit  <a href="/builtin/#bool">bool</a>      <span class="comment">// if set, &#34;;&#34; was omitted in the source</span>
@@ -1011,45 +1435,87 @@ An EmptyStmt node represents an empty statement. The "position" of the empty
 statement is the position of the immediately following (explicit or implicit)
 semicolon.
 
+EmptyStmt 代表一个语句。空语句在分号的位置。
+
 <h3 id="EmptyStmt.End">func (*EmptyStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L727">End</a>
-    <a href="#EmptyStmt.End">¶</a></h3>
+
+```
+<a href="#EmptyStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#EmptyStmt">EmptyStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="EmptyStmt.Pos">func (*EmptyStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L705">Pos</a>
-    <a href="#EmptyStmt.Pos">¶</a></h3>
+
+```
+<a href="#EmptyStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#EmptyStmt">EmptyStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Expr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L31">Expr</a>
-    <a href="#Expr">¶</a></h2>
+
+```
+<a href="#Expr">¶</a></h2>
+
+```
+
 <pre>type Expr interface {
-    <a href="#Node">Node</a>
-    <span class="comment">// contains filtered or unexported methods</span>
+
+```
+<a href="#Node">Node</a>
+<span class="comment">// contains filtered or unexported methods</span>
+
+```
+
 }</pre>
 
 All expression nodes implement the Expr interface.
 
+所有的表达式都实现了 Expr 接口。
+
 <h2 id="ExprStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L572">ExprStmt</a>
-    <a href="#ExprStmt">¶</a></h2>
+
+```
+<a href="#ExprStmt">¶</a></h2>
+
+```
+
 <pre>type ExprStmt struct {
 <span id="ExprStmt.X"></span>    X <a href="#Expr">Expr</a> <span class="comment">// expression</span>
 }</pre>
 
 An ExprStmt node represents a (stand-alone) expression in a statement list.
 
+ExprStmt 代表一个在语句中的表达式。
+
 <h3 id="ExprStmt.End">func (*ExprStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L734">End</a>
-    <a href="#ExprStmt.End">¶</a></h3>
+
+```
+<a href="#ExprStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ExprStmt">ExprStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ExprStmt.Pos">func (*ExprStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L707">Pos</a>
-    <a href="#ExprStmt.Pos">¶</a></h3>
+
+```
+<a href="#ExprStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ExprStmt">ExprStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Field">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L147">Field</a>
-    <a href="#Field">¶</a></h2>
+
+```
+<a href="#Field">¶</a></h2>
+
+```
+
 <pre>type Field struct {
 <span id="Field.Doc"></span>    Doc     *<a href="#CommentGroup">CommentGroup</a> <span class="comment">// associated documentation; or nil</span>
 <span id="Field.Names"></span>    Names   []*<a href="#Ident">Ident</a>      <span class="comment">// field/method/parameter names; or nil if anonymous field</span>
@@ -1061,24 +1527,48 @@ An ExprStmt node represents a (stand-alone) expression in a statement list.
 A Field represents a Field declaration list in a struct type, a method list in
 an interface type, or a parameter/result declaration in a signature.
 
+Field 代表一个结构体的字段声明。一个接口的方法列表，或者函数声明中的参数值声明。
+
+
+
 <h3 id="Field.End">func (*Field) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L162">End</a>
-    <a href="#Field.End">¶</a></h3>
+
+```
+<a href="#Field.End">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#Field">Field</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="Field.Pos">func (*Field) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L155">Pos</a>
-    <a href="#Field.Pos">¶</a></h3>
+
+```
+<a href="#Field.Pos">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#Field">Field</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="FieldFilter">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/print.go#L8">FieldFilter</a>
-    <a href="#FieldFilter">¶</a></h2>
+
+```
+<a href="#FieldFilter">¶</a></h2>
+
+```
+
 <pre>type FieldFilter func(name <a href="/builtin/#string">string</a>, value <a href="/reflect/">reflect</a>.<a href="/reflect/#Value">Value</a>) <a href="/builtin/#bool">bool</a></pre>
 
 A FieldFilter may be provided to Fprint to control the output.
 
+FieldFilter 提供一个控制 Frint 输出的手段。
+
 <h2 id="FieldList">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L170">FieldList</a>
-    <a href="#FieldList">¶</a></h2>
+
+```
+<a href="#FieldList">¶</a></h2>
+
+```
+
 <pre>type FieldList struct {
 <span id="FieldList.Opening"></span>    Opening <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of opening parenthesis/brace, if any</span>
 <span id="FieldList.List"></span>    List    []*<a href="#Field">Field</a>  <span class="comment">// field list; or nil</span>
@@ -1087,24 +1577,46 @@ A FieldFilter may be provided to Fprint to control the output.
 
 A FieldList represents a list of Fields, enclosed by parentheses or braces.
 
+FiledList 代表字段列表。
+
 <h3 id="FieldList.End">func (*FieldList) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L188">End</a>
-    <a href="#FieldList.End">¶</a></h3>
+
+```
+<a href="#FieldList.End">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#FieldList">FieldList</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="FieldList.NumFields">func (*FieldList) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L201">NumFields</a>
-    <a href="#FieldList.NumFields">¶</a></h3>
+
+```
+<a href="#FieldList.NumFields">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#FieldList">FieldList</a>) NumFields() <a href="/builtin/#int">int</a></pre>
 
 NumFields returns the number of (named and anonymous fields) in a FieldList.
 
+NumFields 返回 FieldList 的长度。
+
 <h3 id="FieldList.Pos">func (*FieldList) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L176">Pos</a>
-    <a href="#FieldList.Pos">¶</a></h3>
+
+```
+<a href="#FieldList.Pos">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#FieldList">FieldList</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="File">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L973">File</a>
-    <a href="#File">¶</a></h2>
+
+```
+<a href="#File">¶</a></h2>
+
+```
+
 <pre>type File struct {
 <span id="File.Doc"></span>    Doc        *<a href="#CommentGroup">CommentGroup</a>   <span class="comment">// associated documentation; or nil</span>
 <span id="File.Package"></span>    Package    <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>       <span class="comment">// position of &#34;package&#34; keyword</span>
@@ -1118,9 +1630,15 @@ NumFields returns the number of (named and anonymous fields) in a FieldList.
 
 A File node represents a Go source file.
 
+File 代表一个 Go 源文件。
+
 The Comments list contains all comments in the source file in order of
 appearance, including the comments that are pointed to from other nodes via Doc
 and Comment fields.
+
+注释列表包含源文件中的所有注释并按顺序排列，包括其他注释字段。
+
+
 
 For correct printing of source code containing comments (using packages
 go/format and go/printer), special care must be taken to update comments when a
@@ -1130,35 +1648,59 @@ relevant comments in their vicinity must also be removed (from the File.Comments
 list) or moved accordingly (by updating their positions). A CommentMap may be
 used to facilitate some of these operations.
 
+为了正确的将包含注释的源码打印出来（使用 go/format 和 go/printer），当源码树被修改时我们需要额外的处理：打印的时候，注释基于他们的位置在标记之间。如果语法树删除或者移动，和他有关的注释也必须被移除（在 File.Comments 中移除），或移动。一个 CommentMap 可以被使用加快这个工作。
+
 Whether and how a comment is associated with a node depends on the
 interpretation of the syntax tree by the manipulating program: Except for Doc
 and Comment comments directly associated with nodes, the remaining comments are
 "free-floating" (see also issues #18593, #20744).
 
 <h3 id="MergePackageFiles">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L305">MergePackageFiles</a>
-    <a href="#MergePackageFiles">¶</a></h3>
+
+```
+<a href="#MergePackageFiles">¶</a></h3>
+
+```
+
 <pre>func MergePackageFiles(pkg *<a href="#Package">Package</a>, mode <a href="#MergeMode">MergeMode</a>) *<a href="#File">File</a></pre>
 
 MergePackageFiles creates a file AST by merging the ASTs of the files belonging
 to a package. The mode flags control merging behavior.
 
 <h3 id="File.End">func (*File) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L985">End</a>
-    <a href="#File.End">¶</a></h3>
+
+```
+<a href="#File.End">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#File">File</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="File.Pos">func (*File) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L984">Pos</a>
-    <a href="#File.Pos">¶</a></h3>
+
+```
+<a href="#File.Pos">¶</a></h3>
+
+```
+
 <pre>func (f *<a href="#File">File</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Filter">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L36">Filter</a>
-    <a href="#Filter">¶</a></h2>
+
+```
+<a href="#Filter">¶</a></h2>
+
+```
+
 <pre>type Filter func(<a href="/builtin/#string">string</a>) <a href="/builtin/#bool">bool</a></pre>
 
-
 <h2 id="ForStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L682">ForStmt</a>
-    <a href="#ForStmt">¶</a></h2>
+
+```
+<a href="#ForStmt">¶</a></h2>
+
+```
+
 <pre>type ForStmt struct {
 <span id="ForStmt.For"></span>    For  <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;for&#34; keyword</span>
 <span id="ForStmt.Init"></span>    Init <a href="#Stmt">Stmt</a>      <span class="comment">// initialization statement; or nil</span>
@@ -1170,17 +1712,30 @@ to a package. The mode flags control merging behavior.
 A ForStmt represents a for statement.
 
 <h3 id="ForStmt.End">func (*ForStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L776">End</a>
-    <a href="#ForStmt.End">¶</a></h3>
+
+```
+<a href="#ForStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ForStmt">ForStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ForStmt.Pos">func (*ForStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L722">Pos</a>
-    <a href="#ForStmt.Pos">¶</a></h3>
+
+```
+<a href="#ForStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ForStmt">ForStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="FuncDecl">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L915">FuncDecl</a>
-    <a href="#FuncDecl">¶</a></h2>
+
+```
+<a href="#FuncDecl">¶</a></h2>
+
+```
+
 <pre>type FuncDecl struct {
 <span id="FuncDecl.Doc"></span>    Doc  *<a href="#CommentGroup">CommentGroup</a> <span class="comment">// associated documentation; or nil</span>
 <span id="FuncDecl.Recv"></span>    Recv *<a href="#FieldList">FieldList</a>    <span class="comment">// receiver (methods); or nil (functions)</span>
@@ -1192,17 +1747,30 @@ A ForStmt represents a for statement.
 A FuncDecl node represents a function declaration.
 
 <h3 id="FuncDecl.End">func (*FuncDecl) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L937">End</a>
-    <a href="#FuncDecl.End">¶</a></h3>
+
+```
+<a href="#FuncDecl.End">¶</a></h3>
+
+```
+
 <pre>func (d *<a href="#FuncDecl">FuncDecl</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="FuncDecl.Pos">func (*FuncDecl) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L928">Pos</a>
-    <a href="#FuncDecl.Pos">¶</a></h3>
+
+```
+<a href="#FuncDecl.Pos">¶</a></h3>
+
+```
+
 <pre>func (d *<a href="#FuncDecl">FuncDecl</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="FuncLit">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L250">FuncLit</a>
-    <a href="#FuncLit">¶</a></h2>
+
+```
+<a href="#FuncLit">¶</a></h2>
+
+```
+
 <pre>type FuncLit struct {
 <span id="FuncLit.Type"></span>    Type *<a href="#FuncType">FuncType</a>  <span class="comment">// function type</span>
 <span id="FuncLit.Body"></span>    Body *<a href="#BlockStmt">BlockStmt</a> <span class="comment">// function body</span>
@@ -1211,17 +1779,30 @@ A FuncDecl node represents a function declaration.
 A FuncLit node represents a function literal.
 
 <h3 id="FuncLit.End">func (*FuncLit) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L454">End</a>
-    <a href="#FuncLit.End">¶</a></h3>
+
+```
+<a href="#FuncLit.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#FuncLit">FuncLit</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="FuncLit.Pos">func (*FuncLit) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L416">Pos</a>
-    <a href="#FuncLit.Pos">¶</a></h3>
+
+```
+<a href="#FuncLit.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#FuncLit">FuncLit</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="FuncType">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L381">FuncType</a>
-    <a href="#FuncType">¶</a></h2>
+
+```
+<a href="#FuncType">¶</a></h2>
+
+```
+
 <pre>type FuncType struct {
 <span id="FuncType.Func"></span>    Func    <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>  <span class="comment">// position of &#34;func&#34; keyword (token.NoPos if there is no &#34;func&#34;)</span>
 <span id="FuncType.Params"></span>    Params  *<a href="#FieldList">FieldList</a> <span class="comment">// (incoming) parameters; non-nil</span>
@@ -1231,17 +1812,30 @@ A FuncLit node represents a function literal.
 A FuncType node represents a function type.
 
 <h3 id="FuncType.End">func (*FuncType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L468">End</a>
-    <a href="#FuncType.End">¶</a></h3>
+
+```
+<a href="#FuncType.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#FuncType">FuncType</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="FuncType.Pos">func (*FuncType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L435">Pos</a>
-    <a href="#FuncType.Pos">¶</a></h3>
+
+```
+<a href="#FuncType.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#FuncType">FuncType</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="GenDecl">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L905">GenDecl</a>
-    <a href="#GenDecl">¶</a></h2>
+
+```
+<a href="#GenDecl">¶</a></h2>
+
+```
+
 <pre>type GenDecl struct {
 <span id="GenDecl.Doc"></span>    Doc    *<a href="#CommentGroup">CommentGroup</a> <span class="comment">// associated documentation; or nil</span>
 <span id="GenDecl.TokPos"></span>    TokPos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>     <span class="comment">// position of Tok</span>
@@ -1257,23 +1851,39 @@ parenthesized declaration.
 
 Relationship between Tok value and Specs element type:
 
-    token.IMPORT  *ImportSpec
-    token.CONST   *ValueSpec
-    token.TYPE    *TypeSpec
-    token.VAR     *ValueSpec
+```
+token.IMPORT  *ImportSpec
+token.CONST   *ValueSpec
+token.TYPE    *TypeSpec
+token.VAR     *ValueSpec
+
+```
 
 <h3 id="GenDecl.End">func (*GenDecl) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L931">End</a>
-    <a href="#GenDecl.End">¶</a></h3>
+
+```
+<a href="#GenDecl.End">¶</a></h3>
+
+```
+
 <pre>func (d *<a href="#GenDecl">GenDecl</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="GenDecl.Pos">func (*GenDecl) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L927">Pos</a>
-    <a href="#GenDecl.Pos">¶</a></h3>
+
+```
+<a href="#GenDecl.Pos">¶</a></h3>
+
+```
+
 <pre>func (d *<a href="#GenDecl">GenDecl</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="GoStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L601">GoStmt</a>
-    <a href="#GoStmt">¶</a></h2>
+
+```
+<a href="#GoStmt">¶</a></h2>
+
+```
+
 <pre>type GoStmt struct {
 <span id="GoStmt.Go"></span>    Go   <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;go&#34; keyword</span>
 <span id="GoStmt.Call"></span>    Call *<a href="#CallExpr">CallExpr</a>
@@ -1282,17 +1892,30 @@ Relationship between Tok value and Specs element type:
 A GoStmt node represents a go statement.
 
 <h3 id="GoStmt.End">func (*GoStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L740">End</a>
-    <a href="#GoStmt.End">¶</a></h3>
+
+```
+<a href="#GoStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#GoStmt">GoStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="GoStmt.Pos">func (*GoStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L711">Pos</a>
-    <a href="#GoStmt.Pos">¶</a></h3>
+
+```
+<a href="#GoStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#GoStmt">GoStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Ident">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L228">Ident</a>
-    <a href="#Ident">¶</a></h2>
+
+```
+<a href="#Ident">¶</a></h2>
+
+```
+
 <pre>type Ident struct {
 <span id="Ident.NamePos"></span>    NamePos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// identifier position</span>
 <span id="Ident.Name"></span>    Name    <a href="/builtin/#string">string</a>    <span class="comment">// identifier name</span>
@@ -1302,36 +1925,63 @@ A GoStmt node represents a go statement.
 An Ident node represents an identifier.
 
 <h3 id="NewIdent">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L511">NewIdent</a>
-    <a href="#NewIdent">¶</a></h3>
+
+```
+<a href="#NewIdent">¶</a></h3>
+
+```
+
 <pre>func NewIdent(name <a href="/builtin/#string">string</a>) *<a href="#Ident">Ident</a></pre>
 
 NewIdent creates a new Ident without position. Useful for ASTs generated by code
 other than the Go parser.
 
 <h3 id="Ident.End">func (*Ident) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L446">End</a>
-    <a href="#Ident.End">¶</a></h3>
+
+```
+<a href="#Ident.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#Ident">Ident</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="Ident.IsExported">func (*Ident) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L524">IsExported</a>
-    <a href="#Ident.IsExported">¶</a></h3>
+
+```
+<a href="#Ident.IsExported">¶</a></h3>
+
+```
+
 <pre>func (id *<a href="#Ident">Ident</a>) IsExported() <a href="/builtin/#bool">bool</a></pre>
 
 IsExported reports whether id is an exported Go symbol (that is, whether it
 begins with an uppercase letter).
 
 <h3 id="Ident.Pos">func (*Ident) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L413">Pos</a>
-    <a href="#Ident.Pos">¶</a></h3>
+
+```
+<a href="#Ident.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#Ident">Ident</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="Ident.String">func (*Ident) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L526">String</a>
-    <a href="#Ident.String">¶</a></h3>
+
+```
+<a href="#Ident.String">¶</a></h3>
+
+```
+
 <pre>func (id *<a href="#Ident">Ident</a>) String() <a href="/builtin/#string">string</a></pre>
 
-
 <h2 id="IfStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L635">IfStmt</a>
-    <a href="#IfStmt">¶</a></h2>
+
+```
+<a href="#IfStmt">¶</a></h2>
+
+```
+
 <pre>type IfStmt struct {
 <span id="IfStmt.If"></span>    If   <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;if&#34; keyword</span>
 <span id="IfStmt.Init"></span>    Init <a href="#Stmt">Stmt</a>      <span class="comment">// initialization statement; or nil</span>
@@ -1343,17 +1993,30 @@ begins with an uppercase letter).
 An IfStmt node represents an if statement.
 
 <h3 id="IfStmt.End">func (*IfStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L755">End</a>
-    <a href="#IfStmt.End">¶</a></h3>
+
+```
+<a href="#IfStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#IfStmt">IfStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="IfStmt.Pos">func (*IfStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L716">Pos</a>
-    <a href="#IfStmt.Pos">¶</a></h3>
+
+```
+<a href="#IfStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#IfStmt">IfStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="ImportSpec">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L818">ImportSpec</a>
-    <a href="#ImportSpec">¶</a></h2>
+
+```
+<a href="#ImportSpec">¶</a></h2>
+
+```
+
 <pre>type ImportSpec struct {
 <span id="ImportSpec.Doc"></span>    Doc     *<a href="#CommentGroup">CommentGroup</a> <span class="comment">// associated documentation; or nil</span>
 <span id="ImportSpec.Name"></span>    Name    *<a href="#Ident">Ident</a>        <span class="comment">// local package name (including &#34;.&#34;); or nil</span>
@@ -1365,17 +2028,30 @@ An IfStmt node represents an if statement.
 An ImportSpec node represents a single package import.
 
 <h3 id="ImportSpec.End">func (*ImportSpec) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L858">End</a>
-    <a href="#ImportSpec.End">¶</a></h3>
+
+```
+<a href="#ImportSpec.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ImportSpec">ImportSpec</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ImportSpec.Pos">func (*ImportSpec) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L849">Pos</a>
-    <a href="#ImportSpec.Pos">¶</a></h3>
+
+```
+<a href="#ImportSpec.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ImportSpec">ImportSpec</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Importer">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/resolve.go#L53">Importer</a>
-    <a href="#Importer">¶</a></h2>
+
+```
+<a href="#Importer">¶</a></h2>
+
+```
+
 <pre>type Importer func(imports map[<a href="/builtin/#string">string</a>]*<a href="#Object">Object</a>, path <a href="/builtin/#string">string</a>) (pkg *<a href="#Object">Object</a>, err <a href="/builtin/#error">error</a>)</pre>
 
 An Importer resolves import paths to package Objects. The imports map records
@@ -1386,7 +2062,12 @@ entry. Otherwise, the Importer should load the package data for the given path
 into a new *Object (pkg), record pkg in the imports map, and then return pkg.
 
 <h2 id="IncDecStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L584">IncDecStmt</a>
-    <a href="#IncDecStmt">¶</a></h2>
+
+```
+<a href="#IncDecStmt">¶</a></h2>
+
+```
+
 <pre>type IncDecStmt struct {
 <span id="IncDecStmt.X"></span>    X      <a href="#Expr">Expr</a>
 <span id="IncDecStmt.TokPos"></span>    TokPos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// position of Tok</span>
@@ -1396,17 +2077,30 @@ into a new *Object (pkg), record pkg in the imports map, and then return pkg.
 An IncDecStmt node represents an increment or decrement statement.
 
 <h3 id="IncDecStmt.End">func (*IncDecStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L736">End</a>
-    <a href="#IncDecStmt.End">¶</a></h3>
+
+```
+<a href="#IncDecStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#IncDecStmt">IncDecStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="IncDecStmt.Pos">func (*IncDecStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L709">Pos</a>
-    <a href="#IncDecStmt.Pos">¶</a></h3>
+
+```
+<a href="#IncDecStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#IncDecStmt">IncDecStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="IndexExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L277">IndexExpr</a>
-    <a href="#IndexExpr">¶</a></h2>
+
+```
+<a href="#IndexExpr">¶</a></h2>
+
+```
+
 <pre>type IndexExpr struct {
 <span id="IndexExpr.X"></span>    X      <a href="#Expr">Expr</a>      <span class="comment">// expression</span>
 <span id="IndexExpr.Lbrack"></span>    Lbrack <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;[&#34;</span>
@@ -1417,17 +2111,30 @@ An IncDecStmt node represents an increment or decrement statement.
 An IndexExpr node represents an expression followed by an index.
 
 <h3 id="IndexExpr.End">func (*IndexExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L458">End</a>
-    <a href="#IndexExpr.End">¶</a></h3>
+
+```
+<a href="#IndexExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#IndexExpr">IndexExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="IndexExpr.Pos">func (*IndexExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L425">Pos</a>
-    <a href="#IndexExpr.Pos">¶</a></h3>
+
+```
+<a href="#IndexExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#IndexExpr">IndexExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="InterfaceType">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L388">InterfaceType</a>
-    <a href="#InterfaceType">¶</a></h2>
+
+```
+<a href="#InterfaceType">¶</a></h2>
+
+```
+
 <pre>type InterfaceType struct {
 <span id="InterfaceType.Interface"></span>    Interface  <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>  <span class="comment">// position of &#34;interface&#34; keyword</span>
 <span id="InterfaceType.Methods"></span>    Methods    *<a href="#FieldList">FieldList</a> <span class="comment">// list of methods</span>
@@ -1437,17 +2144,30 @@ An IndexExpr node represents an expression followed by an index.
 An InterfaceType node represents an interface type.
 
 <h3 id="InterfaceType.End">func (*InterfaceType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L474">End</a>
-    <a href="#InterfaceType.End">¶</a></h3>
+
+```
+<a href="#InterfaceType.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#InterfaceType">InterfaceType</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="InterfaceType.Pos">func (*InterfaceType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L441">Pos</a>
-    <a href="#InterfaceType.Pos">¶</a></h3>
+
+```
+<a href="#InterfaceType.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#InterfaceType">InterfaceType</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="KeyValueExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L342">KeyValueExpr</a>
-    <a href="#KeyValueExpr">¶</a></h2>
+
+```
+<a href="#KeyValueExpr">¶</a></h2>
+
+```
+
 <pre>type KeyValueExpr struct {
 <span id="KeyValueExpr.Key"></span>    Key   <a href="#Expr">Expr</a>
 <span id="KeyValueExpr.Colon"></span>    Colon <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;:&#34;</span>
@@ -1457,17 +2177,30 @@ An InterfaceType node represents an interface type.
 A KeyValueExpr node represents (key : value) pairs in composite literals.
 
 <h3 id="KeyValueExpr.End">func (*KeyValueExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L465">End</a>
-    <a href="#KeyValueExpr.End">¶</a></h3>
+
+```
+<a href="#KeyValueExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#KeyValueExpr">KeyValueExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="KeyValueExpr.Pos">func (*KeyValueExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L432">Pos</a>
-    <a href="#KeyValueExpr.Pos">¶</a></h3>
+
+```
+<a href="#KeyValueExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#KeyValueExpr">KeyValueExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="LabeledStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L563">LabeledStmt</a>
-    <a href="#LabeledStmt">¶</a></h2>
+
+```
+<a href="#LabeledStmt">¶</a></h2>
+
+```
+
 <pre>type LabeledStmt struct {
 <span id="LabeledStmt.Label"></span>    Label *<a href="#Ident">Ident</a>
 <span id="LabeledStmt.Colon"></span>    Colon <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;:&#34;</span>
@@ -1477,17 +2210,30 @@ A KeyValueExpr node represents (key : value) pairs in composite literals.
 A LabeledStmt node represents a labeled statement.
 
 <h3 id="LabeledStmt.End">func (*LabeledStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L733">End</a>
-    <a href="#LabeledStmt.End">¶</a></h3>
+
+```
+<a href="#LabeledStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#LabeledStmt">LabeledStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="LabeledStmt.Pos">func (*LabeledStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L706">Pos</a>
-    <a href="#LabeledStmt.Pos">¶</a></h3>
+
+```
+<a href="#LabeledStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#LabeledStmt">LabeledStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="MapType">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L395">MapType</a>
-    <a href="#MapType">¶</a></h2>
+
+```
+<a href="#MapType">¶</a></h2>
+
+```
+
 <pre>type MapType struct {
 <span id="MapType.Map"></span>    Map   <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;map&#34; keyword</span>
 <span id="MapType.Key"></span>    Key   <a href="#Expr">Expr</a>
@@ -1497,66 +2243,112 @@ A LabeledStmt node represents a labeled statement.
 A MapType node represents a map type.
 
 <h3 id="MapType.End">func (*MapType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L475">End</a>
-    <a href="#MapType.End">¶</a></h3>
+
+```
+<a href="#MapType.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#MapType">MapType</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="MapType.Pos">func (*MapType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L442">Pos</a>
-    <a href="#MapType.Pos">¶</a></h3>
+
+```
+<a href="#MapType.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#MapType">MapType</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="MergeMode">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/filter.go#L264">MergeMode</a>
-    <a href="#MergeMode">¶</a></h2>
+
+```
+<a href="#MergeMode">¶</a></h2>
+
+```
+
 <pre>type MergeMode <a href="/builtin/#uint">uint</a></pre>
 
 The MergeMode flags control the behavior of MergePackageFiles.
 
 <pre>const (
-    <span class="comment">// If set, duplicate function declarations are excluded.</span>
-    <span id="FilterFuncDuplicates">FilterFuncDuplicates</span> <a href="#MergeMode">MergeMode</a> = 1 &lt;&lt; <a href="/builtin/#iota">iota</a>
-    <span class="comment">// If set, comments that are not associated with a specific</span>
-    <span class="comment">// AST node (as Doc or Comment) are excluded.</span>
-    <span id="FilterUnassociatedComments">FilterUnassociatedComments</span>
-    <span class="comment">// If set, duplicate import declarations are excluded.</span>
-    <span id="FilterImportDuplicates">FilterImportDuplicates</span>
+
+```
+<span class="comment">// If set, duplicate function declarations are excluded.</span>
+<span id="FilterFuncDuplicates">FilterFuncDuplicates</span> <a href="#MergeMode">MergeMode</a> = 1 &lt;&lt; <a href="/builtin/#iota">iota</a>
+<span class="comment">// If set, comments that are not associated with a specific</span>
+<span class="comment">// AST node (as Doc or Comment) are excluded.</span>
+<span id="FilterUnassociatedComments">FilterUnassociatedComments</span>
+<span class="comment">// If set, duplicate import declarations are excluded.</span>
+<span id="FilterImportDuplicates">FilterImportDuplicates</span>
+
+```
+
 )</pre>
 
-
 <h2 id="Node">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L25">Node</a>
-    <a href="#Node">¶</a></h2>
+
+```
+<a href="#Node">¶</a></h2>
+
+```
+
 <pre>type Node interface {
-    Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of first character belonging to the node</span>
-    End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of first character immediately after the node</span>
+
+```
+Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of first character belonging to the node</span>
+End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of first character immediately after the node</span>
+
+```
+
 }</pre>
 
 All node types implement the Node interface.
 
 <h2 id="ObjKind">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L127">ObjKind</a>
-    <a href="#ObjKind">¶</a></h2>
+
+```
+<a href="#ObjKind">¶</a></h2>
+
+```
+
 <pre>type ObjKind <a href="/builtin/#int">int</a></pre>
 
 ObjKind describes what an object represents.
 
 <pre>const (
-    <span id="Bad">Bad</span> <a href="#ObjKind">ObjKind</a> = <a href="/builtin/#iota">iota</a> <span class="comment">// for error handling</span>
-    <span id="Pkg">Pkg</span>                <span class="comment">// package</span>
-    <span id="Con">Con</span>                <span class="comment">// constant</span>
-    <span id="Typ">Typ</span>                <span class="comment">// type</span>
-    <span id="Var">Var</span>                <span class="comment">// variable</span>
-    <span id="Fun">Fun</span>                <span class="comment">// function or method</span>
-    <span id="Lbl">Lbl</span>                <span class="comment">// label</span>
+
+```
+<span id="Bad">Bad</span> <a href="#ObjKind">ObjKind</a> = <a href="/builtin/#iota">iota</a> <span class="comment">// for error handling</span>
+<span id="Pkg">Pkg</span>                <span class="comment">// package</span>
+<span id="Con">Con</span>                <span class="comment">// constant</span>
+<span id="Typ">Typ</span>                <span class="comment">// type</span>
+<span id="Var">Var</span>                <span class="comment">// variable</span>
+<span id="Fun">Fun</span>                <span class="comment">// function or method</span>
+<span id="Lbl">Lbl</span>                <span class="comment">// label</span>
+
+```
+
 )</pre>
 
 The list of possible Object kinds.
 
 <h3 id="ObjKind.String">func (ObjKind) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L150">String</a>
-    <a href="#ObjKind.String">¶</a></h3>
+
+```
+<a href="#ObjKind.String">¶</a></h3>
+
+```
+
 <pre>func (kind <a href="#ObjKind">ObjKind</a>) String() <a href="/builtin/#string">string</a></pre>
 
-
 <h2 id="Object">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L66">Object</a>
-    <a href="#Object">¶</a></h2>
+
+```
+<a href="#Object">¶</a></h2>
+
+```
+
 <pre>type Object struct {
 <span id="Object.Kind"></span>    Kind <a href="#ObjKind">ObjKind</a>
 <span id="Object.Name"></span>    Name <a href="/builtin/#string">string</a>      <span class="comment">// declared name</span>
@@ -1570,18 +2362,31 @@ variable, function (incl. methods), or label.
 
 The Data fields contains object-specific data:
 
-    Kind    Data type         Data value
-    Pkg     *Scope            package scope
-    Con     int               iota for the respective declaration
+```
+Kind    Data type         Data value
+Pkg     *Scope            package scope
+Con     int               iota for the respective declaration
+
+```
 
 <h3 id="NewObj">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L75">NewObj</a>
-    <a href="#NewObj">¶</a></h3>
+
+```
+<a href="#NewObj">¶</a></h3>
+
+```
+
 <pre>func NewObj(kind <a href="#ObjKind">ObjKind</a>, name <a href="/builtin/#string">string</a>) *<a href="#Object">Object</a></pre>
 
 NewObj creates a new object of a given kind and name.
 
 <h3 id="Object.Pos">func (*Object) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L82">Pos</a>
-    <a href="#Object.Pos">¶</a></h3>
+
+```
+<a href="#Object.Pos">¶</a></h3>
+
+```
+
 <pre>func (obj *<a href="#Object">Object</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
 Pos computes the source position of the declaration of an object name. The
@@ -1589,7 +2394,12 @@ result may be an invalid position if it cannot be computed (obj.Decl may be nil
 or not correct).
 
 <h2 id="Package">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L995">Package</a>
-    <a href="#Package">¶</a></h2>
+
+```
+<a href="#Package">¶</a></h2>
+
+```
+
 <pre>type Package struct {
 <span id="Package.Name"></span>    Name    <a href="/builtin/#string">string</a>             <span class="comment">// package name</span>
 <span id="Package.Scope"></span>    Scope   *<a href="#Scope">Scope</a>             <span class="comment">// package scope across all files</span>
@@ -1601,7 +2411,12 @@ A Package node represents a set of source files collectively building a Go
 package.
 
 <h3 id="NewPackage">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/resolve.go#L64">NewPackage</a>
-    <a href="#NewPackage">¶</a></h3>
+
+```
+<a href="#NewPackage">¶</a></h3>
+
+```
+
 <pre>func NewPackage(fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, files map[<a href="/builtin/#string">string</a>]*<a href="#File">File</a>, importer <a href="#Importer">Importer</a>, universe *<a href="#Scope">Scope</a>) (*<a href="#Package">Package</a>, <a href="/builtin/#error">error</a>)</pre>
 
 NewPackage creates a new Package node from a set of File nodes. It resolves
@@ -1614,17 +2429,30 @@ package names are reported and then ignored. The result is a package node and a
 scanner.ErrorList if there were errors.
 
 <h3 id="Package.End">func (*Package) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L1003">End</a>
-    <a href="#Package.End">¶</a></h3>
+
+```
+<a href="#Package.End">¶</a></h3>
+
+```
+
 <pre>func (p *<a href="#Package">Package</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="Package.Pos">func (*Package) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L1002">Pos</a>
-    <a href="#Package.Pos">¶</a></h3>
+
+```
+<a href="#Package.Pos">¶</a></h3>
+
+```
+
 <pre>func (p *<a href="#Package">Package</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="ParenExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L264">ParenExpr</a>
-    <a href="#ParenExpr">¶</a></h2>
+
+```
+<a href="#ParenExpr">¶</a></h2>
+
+```
+
 <pre>type ParenExpr struct {
 <span id="ParenExpr.Lparen"></span>    Lparen <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;(&#34;</span>
 <span id="ParenExpr.X"></span>    X      <a href="#Expr">Expr</a>      <span class="comment">// parenthesized expression</span>
@@ -1634,17 +2462,30 @@ scanner.ErrorList if there were errors.
 A ParenExpr node represents a parenthesized expression.
 
 <h3 id="ParenExpr.End">func (*ParenExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L456">End</a>
-    <a href="#ParenExpr.End">¶</a></h3>
+
+```
+<a href="#ParenExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#ParenExpr">ParenExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ParenExpr.Pos">func (*ParenExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L423">Pos</a>
-    <a href="#ParenExpr.Pos">¶</a></h3>
+
+```
+<a href="#ParenExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#ParenExpr">ParenExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="RangeStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L691">RangeStmt</a>
-    <a href="#RangeStmt">¶</a></h2>
+
+```
+<a href="#RangeStmt">¶</a></h2>
+
+```
+
 <pre>type RangeStmt struct {
 <span id="RangeStmt.For"></span>    For        <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// position of &#34;for&#34; keyword</span>
 <span id="RangeStmt.Key"></span>    Key, Value <a href="#Expr">Expr</a>        <span class="comment">// Key, Value may be nil</span>
@@ -1657,17 +2498,30 @@ A ParenExpr node represents a parenthesized expression.
 A RangeStmt represents a for statement with a range clause.
 
 <h3 id="RangeStmt.End">func (*RangeStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L777">End</a>
-    <a href="#RangeStmt.End">¶</a></h3>
+
+```
+<a href="#RangeStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#RangeStmt">RangeStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="RangeStmt.Pos">func (*RangeStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L723">Pos</a>
-    <a href="#RangeStmt.Pos">¶</a></h3>
+
+```
+<a href="#RangeStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#RangeStmt">RangeStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="ReturnStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L613">ReturnStmt</a>
-    <a href="#ReturnStmt">¶</a></h2>
+
+```
+<a href="#ReturnStmt">¶</a></h2>
+
+```
+
 <pre>type ReturnStmt struct {
 <span id="ReturnStmt.Return"></span>    Return  <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;return&#34; keyword</span>
 <span id="ReturnStmt.Results"></span>    Results []<a href="#Expr">Expr</a>    <span class="comment">// result expressions; or nil</span>
@@ -1676,17 +2530,30 @@ A RangeStmt represents a for statement with a range clause.
 A ReturnStmt node represents a return statement.
 
 <h3 id="ReturnStmt.End">func (*ReturnStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L742">End</a>
-    <a href="#ReturnStmt.End">¶</a></h3>
+
+```
+<a href="#ReturnStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ReturnStmt">ReturnStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ReturnStmt.Pos">func (*ReturnStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L713">Pos</a>
-    <a href="#ReturnStmt.Pos">¶</a></h3>
+
+```
+<a href="#ReturnStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ReturnStmt">ReturnStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Scope">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L9">Scope</a>
-    <a href="#Scope">¶</a></h2>
+
+```
+<a href="#Scope">¶</a></h2>
+
+```
+
 <pre>type Scope struct {
 <span id="Scope.Outer"></span>    Outer   *<a href="#Scope">Scope</a>
 <span id="Scope.Objects"></span>    Objects map[<a href="/builtin/#string">string</a>]*<a href="#Object">Object</a>
@@ -1696,13 +2563,23 @@ A Scope maintains the set of named language entities declared in the scope and a
 link to the immediately surrounding (outer) scope.
 
 <h3 id="NewScope">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L15">NewScope</a>
-    <a href="#NewScope">¶</a></h3>
+
+```
+<a href="#NewScope">¶</a></h3>
+
+```
+
 <pre>func NewScope(outer *<a href="#Scope">Scope</a>) *<a href="#Scope">Scope</a></pre>
 
 NewScope creates a new scope nested in the outer scope.
 
 <h3 id="Scope.Insert">func (*Scope) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L33">Insert</a>
-    <a href="#Scope.Insert">¶</a></h3>
+
+```
+<a href="#Scope.Insert">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#Scope">Scope</a>) Insert(obj *<a href="#Object">Object</a>) (alt *<a href="#Object">Object</a>)</pre>
 
 Insert attempts to insert a named object obj into the scope s. If the scope
@@ -1710,20 +2587,35 @@ already contains an object alt with the same name, Insert leaves the scope
 unchanged and returns alt. Otherwise it inserts obj and returns nil.
 
 <h3 id="Scope.Lookup">func (*Scope) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L24">Lookup</a>
-    <a href="#Scope.Lookup">¶</a></h3>
+
+```
+<a href="#Scope.Lookup">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#Scope">Scope</a>) Lookup(name <a href="/builtin/#string">string</a>) *<a href="#Object">Object</a></pre>
 
 Lookup returns the object with the given name if it is found in scope s,
 otherwise it returns nil. Outer scopes are ignored.
 
 <h3 id="Scope.String">func (*Scope) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/scope.go#L41">String</a>
-    <a href="#Scope.String">¶</a></h3>
+
+```
+<a href="#Scope.String">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#Scope">Scope</a>) String() <a href="/builtin/#string">string</a></pre>
 
 Debugging support
 
 <h2 id="SelectStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L676">SelectStmt</a>
-    <a href="#SelectStmt">¶</a></h2>
+
+```
+<a href="#SelectStmt">¶</a></h2>
+
+```
+
 <pre>type SelectStmt struct {
 <span id="SelectStmt.Select"></span>    Select <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>  <span class="comment">// position of &#34;select&#34; keyword</span>
 <span id="SelectStmt.Body"></span>    Body   *<a href="#BlockStmt">BlockStmt</a> <span class="comment">// CommClauses only</span>
@@ -1732,17 +2624,30 @@ Debugging support
 An SelectStmt node represents a select statement.
 
 <h3 id="SelectStmt.End">func (*SelectStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L775">End</a>
-    <a href="#SelectStmt.End">¶</a></h3>
+
+```
+<a href="#SelectStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#SelectStmt">SelectStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="SelectStmt.Pos">func (*SelectStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L721">Pos</a>
-    <a href="#SelectStmt.Pos">¶</a></h3>
+
+```
+<a href="#SelectStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#SelectStmt">SelectStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="SelectorExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L271">SelectorExpr</a>
-    <a href="#SelectorExpr">¶</a></h2>
+
+```
+<a href="#SelectorExpr">¶</a></h2>
+
+```
+
 <pre>type SelectorExpr struct {
 <span id="SelectorExpr.X"></span>    X   <a href="#Expr">Expr</a>   <span class="comment">// expression</span>
 <span id="SelectorExpr.Sel"></span>    Sel *<a href="#Ident">Ident</a> <span class="comment">// field selector</span>
@@ -1751,17 +2656,30 @@ An SelectStmt node represents a select statement.
 A SelectorExpr node represents an expression followed by a selector.
 
 <h3 id="SelectorExpr.End">func (*SelectorExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L457">End</a>
-    <a href="#SelectorExpr.End">¶</a></h3>
+
+```
+<a href="#SelectorExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#SelectorExpr">SelectorExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="SelectorExpr.Pos">func (*SelectorExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L424">Pos</a>
-    <a href="#SelectorExpr.Pos">¶</a></h3>
+
+```
+<a href="#SelectorExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#SelectorExpr">SelectorExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="SendStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L577">SendStmt</a>
-    <a href="#SendStmt">¶</a></h2>
+
+```
+<a href="#SendStmt">¶</a></h2>
+
+```
+
 <pre>type SendStmt struct {
 <span id="SendStmt.Chan"></span>    Chan  <a href="#Expr">Expr</a>
 <span id="SendStmt.Arrow"></span>    Arrow <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;&lt;-&#34;</span>
@@ -1771,17 +2689,30 @@ A SelectorExpr node represents an expression followed by a selector.
 A SendStmt node represents a send statement.
 
 <h3 id="SendStmt.End">func (*SendStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L735">End</a>
-    <a href="#SendStmt.End">¶</a></h3>
+
+```
+<a href="#SendStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#SendStmt">SendStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="SendStmt.Pos">func (*SendStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L708">Pos</a>
-    <a href="#SendStmt.Pos">¶</a></h3>
+
+```
+<a href="#SendStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#SendStmt">SendStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="SliceExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L285">SliceExpr</a>
-    <a href="#SliceExpr">¶</a></h2>
+
+```
+<a href="#SliceExpr">¶</a></h2>
+
+```
+
 <pre>type SliceExpr struct {
 <span id="SliceExpr.X"></span>    X      <a href="#Expr">Expr</a>      <span class="comment">// expression</span>
 <span id="SliceExpr.Lbrack"></span>    Lbrack <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;[&#34;</span>
@@ -1795,26 +2726,49 @@ A SendStmt node represents a send statement.
 An SliceExpr node represents an expression followed by slice indices.
 
 <h3 id="SliceExpr.End">func (*SliceExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L459">End</a>
-    <a href="#SliceExpr.End">¶</a></h3>
+
+```
+<a href="#SliceExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#SliceExpr">SliceExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="SliceExpr.Pos">func (*SliceExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L426">Pos</a>
-    <a href="#SliceExpr.Pos">¶</a></h3>
+
+```
+<a href="#SliceExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#SliceExpr">SliceExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Spec">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L812">Spec</a>
-    <a href="#Spec">¶</a></h2>
+
+```
+<a href="#Spec">¶</a></h2>
+
+```
+
 <pre>type Spec interface {
-    <a href="#Node">Node</a>
-    <span class="comment">// contains filtered or unexported methods</span>
+
+```
+<a href="#Node">Node</a>
+<span class="comment">// contains filtered or unexported methods</span>
+
+```
+
 }</pre>
 
 The Spec type stands for any of *ImportSpec, *ValueSpec, and *TypeSpec.
 
 <h2 id="StarExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L317">StarExpr</a>
-    <a href="#StarExpr">¶</a></h2>
+
+```
+<a href="#StarExpr">¶</a></h2>
+
+```
+
 <pre>type StarExpr struct {
 <span id="StarExpr.Star"></span>    Star <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;*&#34;</span>
 <span id="StarExpr.X"></span>    X    <a href="#Expr">Expr</a>      <span class="comment">// operand</span>
@@ -1824,26 +2778,49 @@ A StarExpr node represents an expression of the form "*" Expression.
 Semantically it could be a unary "*" expression, or a pointer type.
 
 <h3 id="StarExpr.End">func (*StarExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L462">End</a>
-    <a href="#StarExpr.End">¶</a></h3>
+
+```
+<a href="#StarExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#StarExpr">StarExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="StarExpr.Pos">func (*StarExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L429">Pos</a>
-    <a href="#StarExpr.Pos">¶</a></h3>
+
+```
+<a href="#StarExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#StarExpr">StarExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Stmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L37">Stmt</a>
-    <a href="#Stmt">¶</a></h2>
+
+```
+<a href="#Stmt">¶</a></h2>
+
+```
+
 <pre>type Stmt interface {
-    <a href="#Node">Node</a>
-    <span class="comment">// contains filtered or unexported methods</span>
+
+```
+<a href="#Node">Node</a>
+<span class="comment">// contains filtered or unexported methods</span>
+
+```
+
 }</pre>
 
 All statement nodes implement the Stmt interface.
 
 <h2 id="StructType">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L372">StructType</a>
-    <a href="#StructType">¶</a></h2>
+
+```
+<a href="#StructType">¶</a></h2>
+
+```
+
 <pre>type StructType struct {
 <span id="StructType.Struct"></span>    Struct     <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>  <span class="comment">// position of &#34;struct&#34; keyword</span>
 <span id="StructType.Fields"></span>    Fields     *<a href="#FieldList">FieldList</a> <span class="comment">// list of field declarations</span>
@@ -1853,17 +2830,30 @@ All statement nodes implement the Stmt interface.
 A StructType node represents a struct type.
 
 <h3 id="StructType.End">func (*StructType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L467">End</a>
-    <a href="#StructType.End">¶</a></h3>
+
+```
+<a href="#StructType.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#StructType">StructType</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="StructType.Pos">func (*StructType) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L434">Pos</a>
-    <a href="#StructType.Pos">¶</a></h3>
+
+```
+<a href="#StructType.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#StructType">StructType</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="SwitchStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L652">SwitchStmt</a>
-    <a href="#SwitchStmt">¶</a></h2>
+
+```
+<a href="#SwitchStmt">¶</a></h2>
+
+```
+
 <pre>type SwitchStmt struct {
 <span id="SwitchStmt.Switch"></span>    Switch <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>  <span class="comment">// position of &#34;switch&#34; keyword</span>
 <span id="SwitchStmt.Init"></span>    Init   <a href="#Stmt">Stmt</a>       <span class="comment">// initialization statement; or nil</span>
@@ -1874,17 +2864,30 @@ A StructType node represents a struct type.
 A SwitchStmt node represents an expression switch statement.
 
 <h3 id="SwitchStmt.End">func (*SwitchStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L767">End</a>
-    <a href="#SwitchStmt.End">¶</a></h3>
+
+```
+<a href="#SwitchStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#SwitchStmt">SwitchStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="SwitchStmt.Pos">func (*SwitchStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L718">Pos</a>
-    <a href="#SwitchStmt.Pos">¶</a></h3>
+
+```
+<a href="#SwitchStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#SwitchStmt">SwitchStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="TypeAssertExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L298">TypeAssertExpr</a>
-    <a href="#TypeAssertExpr">¶</a></h2>
+
+```
+<a href="#TypeAssertExpr">¶</a></h2>
+
+```
+
 <pre>type TypeAssertExpr struct {
 <span id="TypeAssertExpr.X"></span>    X      <a href="#Expr">Expr</a>      <span class="comment">// expression</span>
 <span id="TypeAssertExpr.Lparen"></span>    Lparen <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a> <span class="comment">// position of &#34;(&#34;</span>
@@ -1895,17 +2898,30 @@ A SwitchStmt node represents an expression switch statement.
 A TypeAssertExpr node represents an expression followed by a type assertion.
 
 <h3 id="TypeAssertExpr.End">func (*TypeAssertExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L460">End</a>
-    <a href="#TypeAssertExpr.End">¶</a></h3>
+
+```
+<a href="#TypeAssertExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#TypeAssertExpr">TypeAssertExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="TypeAssertExpr.Pos">func (*TypeAssertExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L427">Pos</a>
-    <a href="#TypeAssertExpr.Pos">¶</a></h3>
+
+```
+<a href="#TypeAssertExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#TypeAssertExpr">TypeAssertExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="TypeSpec">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L838">TypeSpec</a>
-    <a href="#TypeSpec">¶</a></h2>
+
+```
+<a href="#TypeSpec">¶</a></h2>
+
+```
+
 <pre>type TypeSpec struct {
 <span id="TypeSpec.Doc"></span>    Doc     *<a href="#CommentGroup">CommentGroup</a> <span class="comment">// associated documentation; or nil</span>
 <span id="TypeSpec.Name"></span>    Name    *<a href="#Ident">Ident</a>        <span class="comment">// type name</span>
@@ -1917,17 +2933,30 @@ A TypeAssertExpr node represents an expression followed by a type assertion.
 A TypeSpec node represents a type declaration (TypeSpec production).
 
 <h3 id="TypeSpec.End">func (*TypeSpec) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L874">End</a>
-    <a href="#TypeSpec.End">¶</a></h3>
+
+```
+<a href="#TypeSpec.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#TypeSpec">TypeSpec</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="TypeSpec.Pos">func (*TypeSpec) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L856">Pos</a>
-    <a href="#TypeSpec.Pos">¶</a></h3>
+
+```
+<a href="#TypeSpec.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#TypeSpec">TypeSpec</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="TypeSwitchStmt">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L660">TypeSwitchStmt</a>
-    <a href="#TypeSwitchStmt">¶</a></h2>
+
+```
+<a href="#TypeSwitchStmt">¶</a></h2>
+
+```
+
 <pre>type TypeSwitchStmt struct {
 <span id="TypeSwitchStmt.Switch"></span>    Switch <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>  <span class="comment">// position of &#34;switch&#34; keyword</span>
 <span id="TypeSwitchStmt.Init"></span>    Init   <a href="#Stmt">Stmt</a>       <span class="comment">// initialization statement; or nil</span>
@@ -1938,17 +2967,30 @@ A TypeSpec node represents a type declaration (TypeSpec production).
 An TypeSwitchStmt node represents a type switch statement.
 
 <h3 id="TypeSwitchStmt.End">func (*TypeSwitchStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L768">End</a>
-    <a href="#TypeSwitchStmt.End">¶</a></h3>
+
+```
+<a href="#TypeSwitchStmt.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#TypeSwitchStmt">TypeSwitchStmt</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="TypeSwitchStmt.Pos">func (*TypeSwitchStmt) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L719">Pos</a>
-    <a href="#TypeSwitchStmt.Pos">¶</a></h3>
+
+```
+<a href="#TypeSwitchStmt.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#TypeSwitchStmt">TypeSwitchStmt</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="UnaryExpr">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L325">UnaryExpr</a>
-    <a href="#UnaryExpr">¶</a></h2>
+
+```
+<a href="#UnaryExpr">¶</a></h2>
+
+```
+
 <pre>type UnaryExpr struct {
 <span id="UnaryExpr.OpPos"></span>    OpPos <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a>   <span class="comment">// position of Op</span>
 <span id="UnaryExpr.Op"></span>    Op    <a href="/go/token/">token</a>.<a href="/go/token/#Token">Token</a> <span class="comment">// operator</span>
@@ -1959,17 +3001,30 @@ A UnaryExpr node represents a unary expression. Unary "*" expressions are
 represented via StarExpr nodes.
 
 <h3 id="UnaryExpr.End">func (*UnaryExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L463">End</a>
-    <a href="#UnaryExpr.End">¶</a></h3>
+
+```
+<a href="#UnaryExpr.End">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#UnaryExpr">UnaryExpr</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="UnaryExpr.Pos">func (*UnaryExpr) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L430">Pos</a>
-    <a href="#UnaryExpr.Pos">¶</a></h3>
+
+```
+<a href="#UnaryExpr.Pos">¶</a></h3>
+
+```
+
 <pre>func (x *<a href="#UnaryExpr">UnaryExpr</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="ValueSpec">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L829">ValueSpec</a>
-    <a href="#ValueSpec">¶</a></h2>
+
+```
+<a href="#ValueSpec">¶</a></h2>
+
+```
+
 <pre>type ValueSpec struct {
 <span id="ValueSpec.Doc"></span>    Doc     *<a href="#CommentGroup">CommentGroup</a> <span class="comment">// associated documentation; or nil</span>
 <span id="ValueSpec.Names"></span>    Names   []*<a href="#Ident">Ident</a>      <span class="comment">// value names (len(Names) &gt; 0)</span>
@@ -1982,23 +3037,40 @@ A ValueSpec node represents a constant or variable declaration (ConstSpec or
 VarSpec production).
 
 <h3 id="ValueSpec.End">func (*ValueSpec) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L865">End</a>
-    <a href="#ValueSpec.End">¶</a></h3>
+
+```
+<a href="#ValueSpec.End">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ValueSpec">ValueSpec</a>) End() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h3 id="ValueSpec.Pos">func (*ValueSpec) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/ast.go#L855">Pos</a>
-    <a href="#ValueSpec.Pos">¶</a></h3>
+
+```
+<a href="#ValueSpec.Pos">¶</a></h3>
+
+```
+
 <pre>func (s *<a href="#ValueSpec">ValueSpec</a>) Pos() <a href="/go/token/">token</a>.<a href="/go/token/#Pos">Pos</a></pre>
 
-
 <h2 id="Visitor">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/ast/walk.go#L2">Visitor</a>
-    <a href="#Visitor">¶</a></h2>
+
+```
+<a href="#Visitor">¶</a></h2>
+
+```
+
 <pre>type Visitor interface {
-    Visit(node <a href="#Node">Node</a>) (w <a href="#Visitor">Visitor</a>)
+
+```
+Visit(node <a href="#Node">Node</a>) (w <a href="#Visitor">Visitor</a>)
+
+```
+
 }</pre>
 
 A Visitor's Visit method is invoked for each node encountered by Walk. If the
 result visitor w is not nil, Walk visits each of the children of node with the
 visitor w, followed by a call of w.Visit(nil).
-
 
