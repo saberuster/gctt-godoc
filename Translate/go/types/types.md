@@ -3,30 +3,21 @@ version: 1.9.2
 
   `import "go/types"`
 
-## Overview
+## 概述
 
-Package types declares the data types and implements the algorithms for
-type-checking of Go packages. Use Config.Check to invoke the type checker for a
-package. Alternatively, create a new type checker with NewChecker and invoke it
-incrementally by calling Checker.Files.
+types 包声明了数据类型并且实现了 Go 包类型检查的算法。可以使用 Config.Check 对一个包应用检查器。也可以使用 NewChecker 自定义类型检查器并通过 Checker.Files 调用。
 
-Type-checking consists of several interdependent phases:
+类型检查分为几个阶段：
 
-Name resolution maps each identifier (ast.Ident) in the program to the language
-object (Object) it denotes. Use Info.{Defs,Uses,Implicits} for the results of
-name resolution.
+名称处理器会找到标识符在程序中表示的对象。使用 Info.{Defs,Uses,Implicits} 获得处理结果。
 
-Constant folding computes the exact constant value (constant.Value) for every
-expression (ast.Expr) that is a compile-time constant. Use
-Info.Types[expr].Value for the results of constant folding.
+常量转把每个常量表达式（ast.Expr）转换成对应的值。使用 Info.Types[expr].Value 可以获得转化后的值。
 
-Type inference computes the type (Type) of every expression (ast.Expr) and
-checks for compliance with the language specification. Use Info.Types[expr].Type
-for the results of type inference.
+类型推断会计算每个表达式并检查类型。Info.Types[expr].Type 可以得到类型推断的结果。
 
-For a tutorial, see https://golang.org/s/types-tutorial.
+关于这部分的教程可以访问 https://golang.org/s/types-tutorial.
 
-## Index
+## 索引
 
 - [Variables](#pkg-variables)
 - [func AssertableTo(V *Interface, T Type) bool](#AssertableTo)
@@ -293,13 +284,14 @@ For a tutorial, see https://golang.org/s/types-tutorial.
   - [func (obj *Var) String() string](#Var.String)
   - [func (obj *Var) Type() Type](#Var.Type)
 
-### Examples
+### 例子
 
 - [Info](#exampleInfo)
 - [MethodSet](#exampleMethodSet)
 - [Scope](#exampleScope)
 
-### Package files
+### 文件
+
  [api.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go) [assignments.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/assignments.go) [builtins.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/builtins.go) [call.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/call.go) [check.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/check.go) [conversions.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/conversions.go) [decl.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/decl.go) [errors.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/errors.go) [eval.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/eval.go) [expr.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/expr.go) [exprstring.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/exprstring.go) [initorder.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/initorder.go) [labels.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/labels.go) [lookup.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/lookup.go) [methodset.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/methodset.go) [object.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go) [objset.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/objset.go) [operand.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/operand.go) [ordering.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/ordering.go) [package.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/package.go) [predicates.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/predicates.go) [resolver.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/resolver.go) [return.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/return.go) [scope.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/scope.go) [selection.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/selection.go) [sizes.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/sizes.go) [stmt.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/stmt.go) [type.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go) [typestring.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/typestring.go) [typexpr.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/typexpr.go) [universe.go](//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/universe.go)
 
 <h2 id="pkg-variables">Variables</h2>
@@ -331,7 +323,7 @@ For a tutorial, see https://golang.org/s/types-tutorial.
     <a href="#Complex128">Complex128</a>:    {<a href="#Complex128">Complex128</a>, <a href="#IsComplex">IsComplex</a>, &#34;complex128&#34;},
     <a href="#String">String</a>:        {<a href="#String">String</a>, <a href="#IsString">IsString</a>, &#34;string&#34;},
     <a href="#UnsafePointer">UnsafePointer</a>: {<a href="#UnsafePointer">UnsafePointer</a>, 0, &#34;Pointer&#34;},
-
+    
     <a href="#UntypedBool">UntypedBool</a>:    {<a href="#UntypedBool">UntypedBool</a>, <a href="#IsBoolean">IsBoolean</a> | <a href="#IsUntyped">IsUntyped</a>, &#34;untyped bool&#34;},
     <a href="#UntypedInt">UntypedInt</a>:     {<a href="#UntypedInt">UntypedInt</a>, <a href="#IsInteger">IsInteger</a> | <a href="#IsUntyped">IsUntyped</a>, &#34;untyped int&#34;},
     <a href="#UntypedRune">UntypedRune</a>:    {<a href="#UntypedRune">UntypedRune</a>, <a href="#IsInteger">IsInteger</a> | <a href="#IsUntyped">IsUntyped</a>, &#34;untyped rune&#34;},
@@ -346,87 +338,81 @@ For a tutorial, see https://golang.org/s/types-tutorial.
     <a href="#AssertableTo">¶</a></h2>
 <pre>func AssertableTo(V *<a href="#Interface">Interface</a>, T <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-AssertableTo reports whether a value of type V can be asserted to have type T.
+AssertableTo 检查类型 V 的值是否能转换为类型 T。
 
 <h2 id="AssignableTo">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L351">AssignableTo</a>
     <a href="#AssignableTo">¶</a></h2>
 <pre>func AssignableTo(V, T <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-AssignableTo reports whether a value of type V is assignable to a variable of
-type T.
+AssignableTo 检查类型 V 是否能赋值给类型 T。
 
 <h2 id="Comparable">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/predicates.go#L71">Comparable</a>
     <a href="#Comparable">¶</a></h2>
 <pre>func Comparable(T <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-Comparable reports whether values of type T are comparable.
+Comparable 判断类型 T 是否可比较。
 
 <h2 id="ConvertibleTo">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L357">ConvertibleTo</a>
     <a href="#ConvertibleTo">¶</a></h2>
 <pre>func ConvertibleTo(V, T <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-ConvertibleTo reports whether a value of type V is convertible to a value of
-type T.
+ConvertibleTo 判断类型 V 的值是否可以转换成类型 T。
 
 <h2 id="DefPredeclaredTestFuncs">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/universe.go#L160">DefPredeclaredTestFuncs</a>
     <a href="#DefPredeclaredTestFuncs">¶</a></h2>
 <pre>func DefPredeclaredTestFuncs()</pre>
 
-DefPredeclaredTestFuncs defines the assert and trace built-ins. These built-ins
-are intended for debugging and testing of this package only.
+DefPredeclaredTestFuncs 定义断言和内置的追溯器。这些内置功只是为了包的测试和调试。
 
 <h2 id="ExprString">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/exprstring.go#L5">ExprString</a>
     <a href="#ExprString">¶</a></h2>
 <pre>func ExprString(x <a href="/go/ast/">ast</a>.<a href="/go/ast/#Expr">Expr</a>) <a href="/builtin/#string">string</a></pre>
 
-ExprString returns the (possibly simplified) string representation for x.
+ExprString 返回 x 可能的字符串。
 
 <h2 id="Id">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L47">Id</a>
     <a href="#Id">¶</a></h2>
 <pre>func Id(pkg *<a href="#Package">Package</a>, name <a href="/builtin/#string">string</a>) <a href="/builtin/#string">string</a></pre>
 
-Id returns name if it is exported, otherwise it returns the name qualified with
-the package path.
+Id 在导出的时候返回名字，否则返回包路径。
 
 <h2 id="Identical">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/predicates.go#L104">Identical</a>
     <a href="#Identical">¶</a></h2>
 <pre>func Identical(x, y <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-Identical reports whether x and y are identical.
+Identical 判断 x 和 y 是不是相同。
 
 <h2 id="IdenticalIgnoreTags">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/predicates.go#L109">IdenticalIgnoreTags</a>
     <a href="#IdenticalIgnoreTags">¶</a></h2>
 <pre>func IdenticalIgnoreTags(x, y <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-IdenticalIgnoreTags reports whether x and y are identical if tags are ignored.
+IdenticalIgnoreTags 判断当忽略 tag 的时候 x 和 y 是不是相同的。
 
 <h2 id="Implements">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L363">Implements</a>
     <a href="#Implements">¶</a></h2>
 <pre>func Implements(V <a href="#Type">Type</a>, T *<a href="#Interface">Interface</a>) <a href="/builtin/#bool">bool</a></pre>
 
-Implements reports whether type V implements interface T.
+Implements 判断 V 是否实现了接口 T。
 
 <h2 id="IsInterface">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/predicates.go#L65">IsInterface</a>
     <a href="#IsInterface">¶</a></h2>
 <pre>func IsInterface(typ <a href="#Type">Type</a>) <a href="/builtin/#bool">bool</a></pre>
 
-IsInterface reports whether typ is an interface type.
+IsInterface 判断 typ 是不是接口类型。
 
 <h2 id="ObjectString">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L352">ObjectString</a>
     <a href="#ObjectString">¶</a></h2>
 <pre>func ObjectString(obj <a href="#Object">Object</a>, qf <a href="#Qualifier">Qualifier</a>) <a href="/builtin/#string">string</a></pre>
 
-ObjectString returns the string form of obj. The Qualifier controls the printing
-of package-level objects, and may be nil.
+ObjectString 返回 obj 的 string 形式。Qualifier 控制输出包级的对象，并且有可能是 nil。
 
 <h2 id="SelectionString">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/selection.go#L109">SelectionString</a>
     <a href="#SelectionString">¶</a></h2>
 <pre>func SelectionString(s *<a href="#Selection">Selection</a>, qf <a href="#Qualifier">Qualifier</a>) <a href="/builtin/#string">string</a></pre>
 
-SelectionString returns the string form of s. The Qualifier controls the
-printing of package-level objects, and may be nil.
+SelectionString 返回 s 的字符串形式。Qualifier 控制输出包级对象，可能为 nil。
 
-Examples:
+例:
 
     "field (T) f int"
     "method (T) f(X) Y"
@@ -436,29 +422,25 @@ Examples:
     <a href="#TypeString">¶</a></h2>
 <pre>func TypeString(typ <a href="#Type">Type</a>, qf <a href="#Qualifier">Qualifier</a>) <a href="/builtin/#string">string</a></pre>
 
-TypeString returns the string representation of typ. The Qualifier controls the
-printing of package-level objects, and may be nil.
+TypeString 返回 typ 代表的字符串。Qualifier 控制输出包级对象，可能为 nil。
 
 <h2 id="WriteExpr">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/exprstring.go#L12">WriteExpr</a>
     <a href="#WriteExpr">¶</a></h2>
 <pre>func WriteExpr(buf *<a href="/bytes/">bytes</a>.<a href="/bytes/#Buffer">Buffer</a>, x <a href="/go/ast/">ast</a>.<a href="/go/ast/#Expr">Expr</a>)</pre>
 
-WriteExpr writes the (possibly simplified) string representation for x to buf.
+WriteExpr 将 x 代表的字符串写入 buf。
 
 <h2 id="WriteSignature">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/typestring.go#L265">WriteSignature</a>
     <a href="#WriteSignature">¶</a></h2>
 <pre>func WriteSignature(buf *<a href="/bytes/">bytes</a>.<a href="/bytes/#Buffer">Buffer</a>, sig *<a href="#Signature">Signature</a>, qf <a href="#Qualifier">Qualifier</a>)</pre>
 
-WriteSignature writes the representation of the signature sig to buf, without a
-leading "func" keyword. The Qualifier controls the printing of package-level
-objects, and may be nil.
+WriteSignature 将 sig 对应的字符串写进 buf（输出不含邮 "func" 关键字）。Qualifier 控制输出包级对象，可能为 nil。
 
 <h2 id="WriteType">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/typestring.go#L64">WriteType</a>
     <a href="#WriteType">¶</a></h2>
 <pre>func WriteType(buf *<a href="/bytes/">bytes</a>.<a href="/bytes/#Buffer">Buffer</a>, typ <a href="#Type">Type</a>, qf <a href="#Qualifier">Qualifier</a>)</pre>
 
-WriteType writes the string representation of typ to buf. The Qualifier controls
-the printing of package-level objects, and may be nil.
+WriteType 将 typ 对应的字符串写进 buf。Qualifier 控制输出包级对象，可能为 nil。
 
 <h2 id="Array">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L84">Array</a>
     <a href="#Array">¶</a></h2>
@@ -466,25 +448,25 @@ the printing of package-level objects, and may be nil.
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-An Array represents an array type.
+Array 对应数组类型。
 
 <h3 id="NewArray">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L90">NewArray</a>
     <a href="#NewArray">¶</a></h3>
 <pre>func NewArray(elem <a href="#Type">Type</a>, len <a href="/builtin/#int64">int64</a>) *<a href="#Array">Array</a></pre>
 
-NewArray returns a new array type for the given element type and length.
+NewArray 返回一个指定类型和长度的新数组。
 
 <h3 id="Array.Elem">func (*Array) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L96">Elem</a>
     <a href="#Array.Elem">¶</a></h3>
 <pre>func (a *<a href="#Array">Array</a>) Elem() <a href="#Type">Type</a></pre>
 
-Elem returns element type of array a.
+Elem 返回数组的元素类型。
 
 <h3 id="Array.Len">func (*Array) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L93">Len</a>
     <a href="#Array.Len">¶</a></h3>
 <pre>func (a *<a href="#Array">Array</a>) Len() <a href="/builtin/#int64">int64</a></pre>
 
-Len returns the length of array a.
+Len 返回数组 a 的长度。
 
 <h3 id="Array.String">func (*Array) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L431">String</a>
     <a href="#Array.String">¶</a></h3>
@@ -502,25 +484,25 @@ Len returns the length of array a.
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-A Basic represents a basic type.
+Basic 代表一个基础类型。
 
 <h3 id="Basic.Info">func (*Basic) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L78">Info</a>
     <a href="#Basic.Info">¶</a></h3>
 <pre>func (b *<a href="#Basic">Basic</a>) Info() <a href="#BasicInfo">BasicInfo</a></pre>
 
-Info returns information about properties of basic type b.
+Info 返回基本类型 b 的属性信息。
 
 <h3 id="Basic.Kind">func (*Basic) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L75">Kind</a>
     <a href="#Basic.Kind">¶</a></h3>
 <pre>func (b *<a href="#Basic">Basic</a>) Kind() <a href="#BasicKind">BasicKind</a></pre>
 
-Kind returns the kind of basic type b.
+Kind 返回基础类型 b 的类型。
 
 <h3 id="Basic.Name">func (*Basic) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L81">Name</a>
     <a href="#Basic.Name">¶</a></h3>
 <pre>func (b *<a href="#Basic">Basic</a>) Name() <a href="/builtin/#string">string</a></pre>
 
-Name returns the name of basic type b.
+Name 返回基础类型 b 的名称。
 
 <h3 id="Basic.String">func (*Basic) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L430">String</a>
     <a href="#Basic.String">¶</a></h3>
@@ -536,7 +518,7 @@ Name returns the name of basic type b.
     <a href="#BasicInfo">¶</a></h2>
 <pre>type BasicInfo <a href="/builtin/#int">int</a></pre>
 
-BasicInfo is a set of flags describing properties of a basic type.
+BasicInfo 是一个基本类型的描述信息集合。
 
 <pre>const (
     <span id="IsBoolean">IsBoolean</span> <a href="#BasicInfo">BasicInfo</a> = 1 &lt;&lt; <a href="/builtin/#iota">iota</a>
@@ -546,19 +528,19 @@ BasicInfo is a set of flags describing properties of a basic type.
     <span id="IsComplex">IsComplex</span>
     <span id="IsString">IsString</span>
     <span id="IsUntyped">IsUntyped</span>
-
+    
     <span id="IsOrdered">IsOrdered</span>   = <a href="#IsInteger">IsInteger</a> | <a href="#IsFloat">IsFloat</a> | <a href="#IsString">IsString</a>
     <span id="IsNumeric">IsNumeric</span>   = <a href="#IsInteger">IsInteger</a> | <a href="#IsFloat">IsFloat</a> | <a href="#IsComplex">IsComplex</a>
     <span id="IsConstType">IsConstType</span> = <a href="#IsBoolean">IsBoolean</a> | <a href="#IsNumeric">IsNumeric</a> | <a href="#IsString">IsString</a>
 )</pre>
 
-Properties of basic types.
+基础类型的属性。
 
 <h2 id="BasicKind">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L10">BasicKind</a>
     <a href="#BasicKind">¶</a></h2>
 <pre>type BasicKind <a href="/builtin/#int">int</a></pre>
 
-BasicKind describes the kind of basic type.
+BasicKind 描述基础类型的样子。
 
 <pre>const (
     <span id="Invalid">Invalid</span> <a href="#BasicKind">BasicKind</a> = <a href="/builtin/#iota">iota</a> <span class="comment">// type is invalid</span>
@@ -582,7 +564,7 @@ BasicKind describes the kind of basic type.
     <span id="Complex128">Complex128</span>
     <span id="String">String</span>
     <span id="UnsafePointer">UnsafePointer</span>
-
+    
     <span class="comment">// types for untyped values</span>
     <span id="UntypedBool">UntypedBool</span>
     <span id="UntypedInt">UntypedInt</span>
@@ -591,7 +573,7 @@ BasicKind describes the kind of basic type.
     <span id="UntypedComplex">UntypedComplex</span>
     <span id="UntypedString">UntypedString</span>
     <span id="UntypedNil">UntypedNil</span>
-
+    
     <span class="comment">// aliases</span>
     <span id="Byte">Byte</span> = <a href="#Uint8">Uint8</a>
     <span id="Rune">Rune</span> = <a href="#Int32">Int32</a>
@@ -604,7 +586,7 @@ BasicKind describes the kind of basic type.
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-A Builtin represents a built-in function. Builtins don't have a valid type.
+Builtin 代表内置函数，它么你有有效的类型。
 
 <h3 id="Builtin.Exported">func (*Builtin) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L81">Exported</a>
     <a href="#Builtin.Exported">¶</a></h3>
@@ -652,25 +634,25 @@ A Builtin represents a built-in function. Builtins don't have a valid type.
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-A Chan represents a channel type.
+Chan 代表一个 channel 类型。
 
 <h3 id="NewChan">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L357">NewChan</a>
     <a href="#NewChan">¶</a></h3>
 <pre>func NewChan(dir <a href="#ChanDir">ChanDir</a>, elem <a href="#Type">Type</a>) *<a href="#Chan">Chan</a></pre>
 
-NewChan returns a new channel type for the given direction and element type.
+NewChan 返回指定方向和元素类型的 channel。
 
 <h3 id="Chan.Dir">func (*Chan) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L362">Dir</a>
     <a href="#Chan.Dir">¶</a></h3>
 <pre>func (c *<a href="#Chan">Chan</a>) Dir() <a href="#ChanDir">ChanDir</a></pre>
 
-Dir returns the direction of channel c.
+Dir 返回 c 对应的方向。
 
 <h3 id="Chan.Elem">func (*Chan) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L365">Elem</a>
     <a href="#Chan.Elem">¶</a></h3>
 <pre>func (c *<a href="#Chan">Chan</a>) Elem() <a href="#Type">Type</a></pre>
 
-Elem returns the element type of channel c.
+Elem 返回 c 的元素类型。
 
 <h3 id="Chan.String">func (*Chan) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/type.go#L439">String</a>
     <a href="#Chan.String">¶</a></h3>
@@ -686,7 +668,7 @@ Elem returns the element type of channel c.
     <a href="#ChanDir">¶</a></h2>
 <pre>type ChanDir <a href="/builtin/#int">int</a></pre>
 
-A ChanDir value indicates a channel direction.
+ChanDir 指定 channel 的方向。
 
 <pre>const (
     <span id="SendRecv">SendRecv</span> <a href="#ChanDir">ChanDir</a> = <a href="/builtin/#iota">iota</a>
@@ -694,7 +676,7 @@ A ChanDir value indicates a channel direction.
     <span id="RecvOnly">RecvOnly</span>
 )</pre>
 
-The direction of a channel is indicated by one of these constants.
+channel 的方向是其中的一种。
 
 <h2 id="Checker">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/check.go#L62">Checker</a>
     <a href="#Checker">¶</a></h2>
@@ -703,21 +685,19 @@ The direction of a channel is indicated by one of these constants.
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-A Checker maintains the state of the type checker. It must be created with
-NewChecker.
+Checher 维护类型检查的状态。它必须由 NewChecker 创建。
 
 <h3 id="NewChecker">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/check.go#L149">NewChecker</a>
     <a href="#NewChecker">¶</a></h3>
 <pre>func NewChecker(conf *<a href="#Config">Config</a>, fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, pkg *<a href="#Package">Package</a>, info *<a href="#Info">Info</a>) *<a href="#Checker">Checker</a></pre>
 
-NewChecker returns a new Checker instance for a given package. Package files may
-be added incrementally via checker.Files.
+NewChecker 返回一个指定包的 Checker 实例。包中的文件可以通过 checker.Files 添加。
 
 <h3 id="Checker.Files">func (*Checker) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/check.go#L220">Files</a>
     <a href="#Checker.Files">¶</a></h3>
 <pre>func (check *<a href="#Checker">Checker</a>) Files(files []*<a href="/go/ast/">ast</a>.<a href="/go/ast/#File">File</a>) <a href="/builtin/#error">error</a></pre>
 
-Files checks the provided files as part of the checker's package.
+Files 检查包中指定的文件。
 
 <h2 id="Config">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L84">Config</a>
     <a href="#Config">¶</a></h2>
@@ -761,23 +741,17 @@ Files checks the provided files as part of the checker's package.
 <span id="Config.DisableUnusedImportCheck"></span>    DisableUnusedImportCheck <a href="/builtin/#bool">bool</a>
 }</pre>
 
-A Config specifies the configuration for type checking. The zero value for
-Config is a ready-to-use default configuration.
+Config 指定类型检查时的配置。零值 Config 意味着使用默认参数。
 
 <h3 id="Config.Check">func (*Config) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L339">Check</a>
     <a href="#Config.Check">¶</a></h3>
 <pre>func (conf *<a href="#Config">Config</a>) Check(path <a href="/builtin/#string">string</a>, fset *<a href="/go/token/">token</a>.<a href="/go/token/#FileSet">FileSet</a>, files []*<a href="/go/ast/">ast</a>.<a href="/go/ast/#File">File</a>, info *<a href="#Info">Info</a>) (*<a href="#Package">Package</a>, <a href="/builtin/#error">error</a>)</pre>
 
-Check type-checks a package and returns the resulting package object and the
-first error if any. Additionally, if info != nil, Check populates each of the
-non-nil maps in the Info struct.
+Check 对一个包进行类型检查，并且返回包结果对象，和第一个发生的错误。如果 info != nil，会检查不是 nil 的 Info 结构。
 
-The package is marked as complete if no errors occurred, otherwise it is
-incomplete. See Config.Error for controlling behavior in the presence of errors.
+如果包么有错误将会被标记为已完成。 Config.Error 会控制错误。
 
-The package is specified by a list of *ast.Files and corresponding file set, and
-the package path the package is identified with. The clean path must not be
-empty or dot (".").
+包可以用一个 *ast.Files 列表和对应的 fset 指定。并指定包作为标识符。
 
 <h2 id="Const">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L129">Const</a>
     <a href="#Const">¶</a></h2>
@@ -785,7 +759,7 @@ empty or dot (".").
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-A Const represents a declared constant.
+Const 代表一个常量声明。
 
 <h3 id="NewConst">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L135">NewConst</a>
     <a href="#NewConst">¶</a></h3>
@@ -846,17 +820,13 @@ A Const represents a declared constant.
 <span id="Error.Soft"></span>    Soft <a href="/builtin/#bool">bool</a>           <span class="comment">// if set, error is &#34;soft&#34;</span>
 }</pre>
 
-An Error describes a type-checking error; it implements the error interface. A
-"soft" error is an error that still permits a valid interpretation of a package
-(such as "unused variable"); "hard" errors may lead to unpredictable behavior if
-ignored.
+Error 对应一个类型检查时的错误。它实现了 error 接口。一个软错误就是语法有效的错误（例如：未使用的变量）。运行时错误就是如果忽略不能被侦测出的错误。
 
 <h3 id="Error.Error">func (Error) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L40">Error</a>
     <a href="#Error.Error">¶</a></h3>
 <pre>func (err <a href="#Error">Error</a>) Error() <a href="/builtin/#string">string</a></pre>
 
-Error returns an error string formatted as follows: filename:line:column:
-message
+Error 返回的错误格式是：文件名：行：列。
 
 <h2 id="Func">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L203">Func</a>
     <a href="#Func">¶</a></h2>
@@ -864,23 +834,17 @@ message
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 
-A Func represents a declared function, concrete method, or abstract (interface)
-method. Its Type() is always a *Signature. An abstract method may belong to many
-interfaces due to embedding.
+Func 对应函数类型，或者方法或者抽象方法。一个抽象方法因为接口的嵌套可能属于多个接口。
 
 <h3 id="MissingMethod">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/lookup.go#L240">MissingMethod</a>
     <a href="#MissingMethod">¶</a></h3>
 <pre>func MissingMethod(V <a href="#Type">Type</a>, T *<a href="#Interface">Interface</a>, static <a href="/builtin/#bool">bool</a>) (method *<a href="#Func">Func</a>, wrongType <a href="/builtin/#bool">bool</a>)</pre>
 
-MissingMethod returns (nil, false) if V implements T, otherwise it returns a
-missing method required by T and whether it is missing or just has the wrong
-type.
+MissingMethod 会在 V 实现了接口 T 时返回（nil，false）。否则返回需要实现的方法，和错误类型（没有实现方法，还是方法的类型不对）。
 
-For non-interface types V, or if static is set, V implements T if all methods of
-T are present in V. Otherwise (V is an interface and static is not set),
-MissingMethod only checks that methods of T which are also present in V have
-matching types (e.g., for a type assertion x.(T) where x is of interface type
-V).
+对于无接口类型的 V。如果 V 包含 T 中的所有方法那么 V 就实现了 T。否则（V 是一个接口或者不是静态类型）。
+
+MissingMethod 只检查 T 中实现了 T 的方法。
 
 <h3 id="NewFunc">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L207">NewFunc</a>
     <a href="#NewFunc">¶</a></h3>
@@ -896,8 +860,7 @@ V).
     <a href="#Func.FullName">¶</a></h3>
 <pre>func (obj *<a href="#Func">Func</a>) FullName() <a href="/builtin/#string">string</a></pre>
 
-FullName returns the package- or receiver-type-qualified name of function or
-method obj.
+FullName 返回包的函数名或者接收者的方法名。
 
 <h3 id="Func.Id">func (*Func) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/object.go#L82">Id</a>
     <a href="#Func.Id">¶</a></h3>
@@ -943,7 +906,7 @@ method obj.
     <a href="#ImportMode">¶</a></h2>
 <pre>type ImportMode <a href="/builtin/#int">int</a></pre>
 
-ImportMode is reserved for future use.
+ImportMode 储备未来用。
 
 <h2 id="Importer">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L49">Importer</a>
     <a href="#Importer">¶</a></h2>
@@ -954,11 +917,9 @@ ImportMode is reserved for future use.
     Import(path <a href="/builtin/#string">string</a>) (*<a href="#Package">Package</a>, <a href="/builtin/#error">error</a>)
 }</pre>
 
-An Importer resolves import paths to Packages.
+Importer 处理包的导入路径。
 
-CAUTION: This interface does not support the import of locally vendored
-packages. See https://golang.org/s/go15vendor. If possible, external
-implementations should implement ImporterFrom.
+小心：这个借口不支持导入本地 vendor包。见https://golang.org/s/go15vendor。如果可以外部实现应该实现 ImporterFrom 方法。
 
 <h2 id="ImporterFrom">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L62">ImporterFrom</a>
     <a href="#ImporterFrom">¶</a></h2>
@@ -969,7 +930,7 @@ implementations should implement ImporterFrom.
     <span class="comment">// The types package does not call Import if an ImporterFrom</span>
     <span class="comment">// is present.</span>
     <a href="#Importer">Importer</a>
-
+    
     <span class="comment">// ImportFrom returns the imported package for the given import</span>
     <span class="comment">// path when imported by a package file located in dir.</span>
     <span class="comment">// If the import failed, besides returning an error, ImportFrom</span>
@@ -982,9 +943,7 @@ implementations should implement ImporterFrom.
     ImportFrom(path, dir <a href="/builtin/#string">string</a>, mode <a href="#ImportMode">ImportMode</a>) (*<a href="#Package">Package</a>, <a href="/builtin/#error">error</a>)
 }</pre>
 
-An ImporterFrom resolves import paths to packages; it supports vendoring per
-https://golang.org/s/go15vendor. Use go/importer to obtain an ImporterFrom
-implementation.
+ImporterFrom 处理包中的导入路径。它支持 vendor 导入。使用 go/importer 可以获取 ImporterFrom 实现。
 
 <h2 id="Info">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/types/api.go#L128">Info</a>
     <a href="#Info">¶</a></h2>
@@ -1027,44 +986,50 @@ implementation.
     Uses map[*<a href="/go/ast/">ast</a>.<a href="/go/ast/#Ident">Ident</a>]<a href="#Object">Object</a>
 
 <span id="Info.Implicits"></span>    <span class="comment">// Implicits maps nodes to their implicitly declared objects, if any.</span>
-    <span class="comment">// The following node and object types may appear:</span>
-    <span class="comment">//</span>
-    <span class="comment">//	node               declared object</span>
-    <span class="comment">//</span>
-    <span class="comment">//	*ast.ImportSpec    *PkgName for dot-imports and imports without renames</span>
-    <span class="comment">//	*ast.CaseClause    type-specific *Var for each type switch case clause (incl. default)</span>
-    <span class="comment">//      *ast.Field         anonymous parameter *Var</span>
-    <span class="comment">//</span>
-    Implicits map[<a href="/go/ast/">ast</a>.<a href="/go/ast/#Node">Node</a>]<a href="#Object">Object</a>
+```
+<span class="comment">// The following node and object types may appear:</span>
+<span class="comment">//</span>
+<span class="comment">//	node               declared object</span>
+<span class="comment">//</span>
+<span class="comment">//	*ast.ImportSpec    *PkgName for dot-imports and imports without renames</span>
+<span class="comment">//	*ast.CaseClause    type-specific *Var for each type switch case clause (incl. default)</span>
+<span class="comment">//      *ast.Field         anonymous parameter *Var</span>
+<span class="comment">//</span>
+Implicits map[<a href="/go/ast/">ast</a>.<a href="/go/ast/#Node">Node</a>]<a href="#Object">Object</a>
+```
 
 <span id="Info.Selections"></span>    <span class="comment">// Selections maps selector expressions (excluding qualified identifiers)</span>
-    <span class="comment">// to their corresponding selections.</span>
-    Selections map[*<a href="/go/ast/">ast</a>.<a href="/go/ast/#SelectorExpr">SelectorExpr</a>]*<a href="#Selection">Selection</a>
+```
+<span class="comment">// to their corresponding selections.</span>
+Selections map[*<a href="/go/ast/">ast</a>.<a href="/go/ast/#SelectorExpr">SelectorExpr</a>]*<a href="#Selection">Selection</a>
+```
 
 <span id="Info.Scopes"></span>    <span class="comment">// Scopes maps ast.Nodes to the scopes they define. Package scopes are not</span>
-    <span class="comment">// associated with a specific node but with all files belonging to a package.</span>
-    <span class="comment">// Thus, the package scope can be found in the type-checked Package object.</span>
-    <span class="comment">// Scopes nest, with the Universe scope being the outermost scope, enclosing</span>
-    <span class="comment">// the package scope, which contains (one or more) files scopes, which enclose</span>
-    <span class="comment">// function scopes which in turn enclose statement and function literal scopes.</span>
-    <span class="comment">// Note that even though package-level functions are declared in the package</span>
-    <span class="comment">// scope, the function scopes are embedded in the file scope of the file</span>
-    <span class="comment">// containing the function declaration.</span>
-    <span class="comment">//</span>
-    <span class="comment">// The following node types may appear in Scopes:</span>
-    <span class="comment">//</span>
-    <span class="comment">//	*ast.File</span>
-    <span class="comment">//	*ast.FuncType</span>
-    <span class="comment">//	*ast.BlockStmt</span>
-    <span class="comment">//	*ast.IfStmt</span>
-    <span class="comment">//	*ast.SwitchStmt</span>
-    <span class="comment">//	*ast.TypeSwitchStmt</span>
-    <span class="comment">//	*ast.CaseClause</span>
-    <span class="comment">//	*ast.CommClause</span>
-    <span class="comment">//	*ast.ForStmt</span>
-    <span class="comment">//	*ast.RangeStmt</span>
-    <span class="comment">//</span>
-    Scopes map[<a href="/go/ast/">ast</a>.<a href="/go/ast/#Node">Node</a>]*<a href="#Scope">Scope</a>
+```
+<span class="comment">// associated with a specific node but with all files belonging to a package.</span>
+<span class="comment">// Thus, the package scope can be found in the type-checked Package object.</span>
+<span class="comment">// Scopes nest, with the Universe scope being the outermost scope, enclosing</span>
+<span class="comment">// the package scope, which contains (one or more) files scopes, which enclose</span>
+<span class="comment">// function scopes which in turn enclose statement and function literal scopes.</span>
+<span class="comment">// Note that even though package-level functions are declared in the package</span>
+<span class="comment">// scope, the function scopes are embedded in the file scope of the file</span>
+<span class="comment">// containing the function declaration.</span>
+<span class="comment">//</span>
+<span class="comment">// The following node types may appear in Scopes:</span>
+<span class="comment">//</span>
+<span class="comment">//	*ast.File</span>
+<span class="comment">//	*ast.FuncType</span>
+<span class="comment">//	*ast.BlockStmt</span>
+<span class="comment">//	*ast.IfStmt</span>
+<span class="comment">//	*ast.SwitchStmt</span>
+<span class="comment">//	*ast.TypeSwitchStmt</span>
+<span class="comment">//	*ast.CaseClause</span>
+<span class="comment">//	*ast.CommClause</span>
+<span class="comment">//	*ast.ForStmt</span>
+<span class="comment">//	*ast.RangeStmt</span>
+<span class="comment">//</span>
+Scopes map[<a href="/go/ast/">ast</a>.<a href="/go/ast/#Node">Node</a>]*<a href="#Scope">Scope</a>
+```
 
 <span id="Info.InitOrder"></span>    <span class="comment">// InitOrder is the list of package-level initializers in the order in which</span>
     <span class="comment">// they must be executed. Initializers referring to variables related by an</span>
@@ -1074,12 +1039,10 @@ implementation.
     InitOrder []*<a href="#Initializer">Initializer</a>
 }</pre>
 
-Info holds result type information for a type-checked package. Only the
-information for which a map is provided is collected. If the package has type
-errors, the collected information may be incomplete.
+Info 保存包的类型检查结果。只会保存 map 中的信息。如果包中有错误类型，收集的信息不回完成。
 
 <a id="exampleInfo"></a>
-Example:
+例:
 
     // Parse a single source file.
     const input = `
@@ -1100,7 +1063,7 @@ Example:
     if err != nil {
         log.Fatal(err)
     }
-
+    
     // Type-check the package.
     // We create an empty map for each kind of input
     // we're interested in, and Check populates them.
@@ -1114,10 +1077,10 @@ Example:
     if err != nil {
         log.Fatal(err)
     }
-
+    
     // Print package-level variables in initialization order.
     fmt.Printf("InitOrder: %v\n\n", info.InitOrder)
-
+    
     // For each named object, print the line and
     // column of its definition and each of its uses.
     fmt.Println("Defs and Uses of each named object:")
@@ -1139,7 +1102,7 @@ Example:
     sort.Strings(items) // sort by line:col, in effect
     fmt.Println(strings.Join(items, "\n"))
     fmt.Println()
-
+    
     fmt.Println("Types and Values of each expression:")
     items = nil
     for expr, tv := range info.Types {
@@ -1157,7 +1120,7 @@ Example:
     }
     sort.Strings(items)
     fmt.Println(strings.Join(items, "\n"))
-
+    
     // Output:
     // InitOrder: [c = "hello" b = S(c) a = len(b)]
     //
@@ -1443,7 +1406,7 @@ Example:
     if err != nil {
         log.Fatal(err)
     }
-
+    
     // Type-check a package consisting of this file.
     // Type information for the imported packages
     // comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
@@ -1452,7 +1415,7 @@ Example:
     if err != nil {
         log.Fatal(err)
     }
-
+    
     // Print the method sets of Celsius and *Celsius.
     celsius := pkg.Scope().Lookup("Celsius").Type()
     for _, t := range []types.Type{celsius, types.NewPointer(celsius)} {
@@ -1463,7 +1426,7 @@ Example:
         }
         fmt.Println()
     }
-
+    
     // Output:
     // Method set of temperature.Celsius:
     // method (temperature.Celsius) String() string
@@ -1618,7 +1581,7 @@ Nil represents the predeclared value nil.
     Type() <a href="#Type">Type</a>     <span class="comment">// object type</span>
     Exported() <a href="/builtin/#bool">bool</a> <span class="comment">// reports whether the name starts with a capital letter</span>
     Id() <a href="/builtin/#string">string</a>     <span class="comment">// object name if exported, qualified name if not exported (see func Id)</span>
-
+    
     <span class="comment">// String returns a human-readable string of the object.</span>
     String() <a href="/builtin/#string">string</a>
     <span class="comment">// contains filtered or unexported methods</span>
@@ -1653,7 +1616,7 @@ and indirect values have the following meaning:
 
     	- If index != nil, the index sequence points to an ambiguous entry
     	(the same name appeared more than once at the same embedding level).
-
+    
     	- If indirect is set, a method with a pointer receiver type was found
          but there was no pointer on the path from the actual receiver type to
     	the method's formal receiver base type, nor was the receiver addressable.
@@ -1884,7 +1847,7 @@ Example:
         }
         files = append(files, f)
     }
-
+    
     // Type-check a package consisting of these files.
     // Type information for the imported "fmt" package
     // comes from $GOROOT/pkg/$GOOS_$GOOARCH/fmt.a.
@@ -1893,14 +1856,14 @@ Example:
     if err != nil {
         log.Fatal(err)
     }
-
+    
     // Print the tree of scopes.
     // For determinism, we redact addresses.
     var buf bytes.Buffer
     pkg.Scope().WriteTo(&buf, 0, true)
     rx := regexp.MustCompile(` 0x[a-fA-F0-9]*`)
     fmt.Println(rx.ReplaceAllString(buf.String(), ""))
-
+    
     // Output:
     // package "temperature" scope {
     // .  const temperature.Boiling temperature.Celsius
@@ -2185,11 +2148,11 @@ Variadic reports whether the signature s is variadic.
     <span class="comment">// Alignof returns the alignment of a variable of type T.</span>
     <span class="comment">// Alignof must implement the alignment guarantees required by the spec.</span>
     Alignof(T <a href="#Type">Type</a>) <a href="/builtin/#int64">int64</a>
-
+    
     <span class="comment">// Offsetsof returns the offsets of the given struct fields, in bytes.</span>
     <span class="comment">// Offsetsof must implement the offset guarantees required by the spec.</span>
     Offsetsof(fields []*<a href="#Var">Var</a>) []<a href="/builtin/#int64">int64</a>
-
+    
     <span class="comment">// Sizeof returns the size of a variable of type T.</span>
     <span class="comment">// Sizeof must implement the size guarantees required by the spec.</span>
     Sizeof(T <a href="#Type">Type</a>) <a href="/builtin/#int64">int64</a>
@@ -2367,7 +2330,7 @@ Len returns the number variables of tuple t.
 <pre>type Type interface {
     <span class="comment">// Underlying returns the underlying type of a type.</span>
     Underlying() <a href="#Type">Type</a>
-
+    
     <span class="comment">// String returns a string representation of a type.</span>
     String() <a href="/builtin/#string">string</a>
 }</pre>
