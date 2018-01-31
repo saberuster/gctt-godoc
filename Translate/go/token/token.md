@@ -203,15 +203,7 @@ Position 返回给定文件位置 p 的 Position 类型值。如果设置 adjust
 
 <pre>func (f *<a href="#File">File</a>) SetLines(lines []<a href="/builtin/#int">int</a>) <a href="/builtin/#bool">bool</a></pre>
 
-SetLines sets the line offsets for a file and reports whether it succeeded. The
-line offsets are the offsets of the first character of each line; for instance
-for the content "ab\nc\n" the line offsets are {0, 3}. An empty file has an
-empty line offset table. Each line offset must be larger than the offset for the
-previous line and smaller than the file size; otherwise SetLines fails and
-returns false. Callers must not mutate the provided slice after SetLines
-returns.
-
-SetLines 为文件设置行偏移量并且返回是否操作成功。行偏移量是基于每行第一个字符的偏移量。例如在内容 "ab\nc\n" 中，行偏移量就是 {0,3}。一个空文件有一个空的偏移量表。每个偏移量必须大于前一行的偏移量并且小于文件大小。否则 SetLines 将会失败并返回 fails。用户在 SetLines 返回后不能修改给定的切片。
+SetLines 为文件设置行偏移量并且返回是否操作成功。行偏移量就是每行第一个字符的偏移量。例如在内容 "ab\nc\n" 中，行偏移量就是 {0,3}。一个空文件的偏移量表也为空。每个偏移量必须大于前一行的偏移量并且小于文件大小。否则 SetLines 将会失败并返回 fails。用户在 SetLines 返回后不能修改给定的切片。
 
 <h3 id="File.SetLinesForContent">func (*File) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/position.go#L178">SetLinesForContent</a>
 
@@ -220,9 +212,6 @@ SetLines 为文件设置行偏移量并且返回是否操作成功。行偏移�
 ```
 
 <pre>func (f *<a href="#File">File</a>) SetLinesForContent(content []<a href="/builtin/#byte">byte</a>)</pre>
-
-SetLinesForContent sets the line offsets for the given file content. It ignores
-position-altering //line comments.
 
 SetLinesForContent 为指定的文件内容设置行偏移。他会忽略注释行。
 
@@ -233,8 +222,6 @@ SetLinesForContent 为指定的文件内容设置行偏移。他会忽略注释�
 ```
 
 <pre>func (f *<a href="#File">File</a>) Size() <a href="/builtin/#int">int</a></pre>
-
-Size returns the size of file f as registered with AddFile.
 
 Size 返回AddFile 注册的文件 f 的大小。
 
@@ -360,42 +347,15 @@ Write 序列化文件 s。
 
 <pre>type Pos <a href="/builtin/#int">int</a></pre>
 
-Pos is a compact encoding of a source position within a file set. It can be
-converted into a Position for a more convenient, but much larger,
-representation.
+Pos 是文件集合中文件资源位置的简易编码。他能很容易的转换成更大更方便的 Position 类型。
 
-Pos 是一个聚合文件集合中文件位置的编码。他能很容易的转换成更大更方便的 Position 类型。
+一个指定文件的 Pos 值在 [base,base+size] 之间。base 和 size 在调用 AddFile 时指定。
 
-The Pos value for a given file is a number in the range [base, base+size], where
-base and size are specified when adding the file to the file set via AddFile.
+想根据指定资源的偏移量得到 Pos 值的话，首先将所有文件使用 FileSet.AddFile 注册进来，然后调用指定File 的 File.Pos(offset)。根据指定文件的 Pos 值， 通过 fset.Position(p) 获得对应 Position 值。
 
-一个指定文件的 Pos 值是一个在 [base,base+size] 的值。base 和 size 通过 AddFile 指定。
-
-To create the Pos value for a specific source offset (measured in bytes), first
-add the respective file to the current file set using FileSet.AddFile and then
-call File.Pos(offset) for that file. Given a Pos value p for a specific file set
-fset, the corresponding Position value is obtained by calling fset.Position(p).
-
-为了创建一个指定资源的偏移量，首先将文件使用 FileSet.AddFile 添加进来，然后调用指定File 的 File.Pos(offset)。
-
-给定一个 Pos 类型值，对应的 Position 值可以通过 fset.Position(p)。来获得。
-
-Pos values can be compared directly with the usual comparison operators: If two
-Pos values p and q are in the same file, comparing p and q is equivalent to
-comparing the respective source file offsets. If p and q are in different files,
-p < q is true if the file implied by p was added to the respective file set
-before the file implied by q.
-
-Pos 值可以用比较运算符直接比较。如果两个 Pos 值 p 和 q 在相同的文件中。如果他们代表相同的偏移量，p == q。
-
-如果 p 和 q 在不同的文件中，如果 p 所在的文件在 q 之前添加，那么 p < q。
+Pos 值可以直接比较。如果两个 Pos 值 p 和 q 在相同的文件中，那和比较对应的偏移量是一样的。如果 p 和 q 所属不同文件， p < q 代表 p 所在文件是早于 q 添加进集合。
 
 <pre>const <span id="NoPos">NoPos</span> <a href="#Pos">Pos</a> = 0</pre>
-
-The zero value for Pos is NoPos; there is no file and line information
-associated with it, and NoPos.IsValid() is false. NoPos is always smaller than
-any other Pos value. The corresponding Position value for NoPos is the zero
-value for Position.
 
 Pos 的零值是 NoPos。没有文件和行信息。并且 NoPos.IsValid() 返回 false。NoPos 总是小于其他 Pos 值。NoPos 对应的Position类型值是 Position 类型的零值。
 
@@ -408,9 +368,7 @@ Pos 的零值是 NoPos。没有文件和行信息。并且 NoPos.IsValid() 返�
 
 <pre>func (p <a href="#Pos">Pos</a>) IsValid() <a href="/builtin/#bool">bool</a></pre>
 
-IsValid reports whether the position is valid.
-
-IsValid 判断 position 是否有效。
+IsValid 判断 p 是否有效。
 
 <h2 id="Position">type <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/position.go#L10">Position</a>
 
@@ -426,10 +384,7 @@ IsValid 判断 position 是否有效。
 <span id="Position.Column"></span>    Column   <a href="/builtin/#int">int</a>    <span class="comment">// column number, starting at 1 (byte count)</span>
 }</pre>
 
-Position describes an arbitrary source position including the file, line, and
-column location. A Position is valid if the line number is > 0.
-
-Position 表示一个资源的绝对位置，包括文件，行数，列数。如果 Position 是合法的那么行号一定大于零。
+Position 表示任何资源的位置，包括文件，行数，列数。如果 Position 是合法的那么行号一定大于零。
 
 <h3 id="Position.IsValid">func (*Position) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/position.go#L18">IsValid</a>
 
@@ -440,9 +395,7 @@ Position 表示一个资源的绝对位置，包括文件，行数，列数。�
 
 <pre>func (pos *<a href="#Position">Position</a>) IsValid() <a href="/builtin/#bool">bool</a></pre>
 
-IsValid reports whether the position is valid.
-
-IsValid 判断 Position 是否有效。
+IsValid 判断 pos 是否有效。
 
 <h3 id="Position.String">func (Position) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/position.go#L27">String</a>
 
@@ -452,8 +405,6 @@ IsValid 判断 Position 是否有效。
 ```
 
 <pre>func (pos <a href="#Position">Position</a>) String() <a href="/builtin/#string">string</a></pre>
-
-String returns a string in one of several forms:
 
 String 返回下面几种格式中的一种：
 
@@ -473,8 +424,6 @@ file                invalid position with file name
 ```
 
 <pre>type Token <a href="/builtin/#int">int</a></pre>
-
-Token is the set of lexical tokens of the Go programming language.
 
 Token 是 Go 的词汇标记集合。
 
@@ -587,8 +536,6 @@ Token 是 Go 的词汇标记集合。
 
 )</pre>
 
-The list of tokens.
-
 标记列表。
 
 <h3 id="Lookup">func <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/token.go#L276">Lookup</a>
@@ -599,8 +546,6 @@ The list of tokens.
 ```
 
 <pre>func Lookup(ident <a href="/builtin/#string">string</a>) <a href="#Token">Token</a></pre>
-
-Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
 
 Lookup 会找到 ident 对应的关键字标记或者 IDENT（如果不是一个关键字）。
 
@@ -613,9 +558,6 @@ Lookup 会找到 ident 对应的关键字标记或者 IDENT（如果不是一个
 
 <pre>func (tok <a href="#Token">Token</a>) IsKeyword() <a href="/builtin/#bool">bool</a></pre>
 
-IsKeyword returns true for tokens corresponding to keywords; it returns false
-otherwise.
-
 IsKeyword 在 token 对应关键字的时候返回 true 否则返回 false。
 
 <h3 id="Token.IsLiteral">func (Token) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/token.go#L288">IsLiteral</a>
@@ -626,9 +568,6 @@ IsKeyword 在 token 对应关键字的时候返回 true 否则返回 false。
 ```
 
 <pre>func (tok <a href="#Token">Token</a>) IsLiteral() <a href="/builtin/#bool">bool</a></pre>
-
-IsLiteral returns true for tokens corresponding to identifiers and basic type
-literals; it returns false otherwise.
 
 IsLiteral 在 token 对应标识符或者基础类型字面值的时候返回 true 否则返回 false。
 
@@ -641,9 +580,6 @@ IsLiteral 在 token 对应标识符或者基础类型字面值的时候返回 tr
 
 <pre>func (tok <a href="#Token">Token</a>) IsOperator() <a href="/builtin/#bool">bool</a></pre>
 
-IsOperator returns true for tokens corresponding to operators and delimiters; it
-returns false otherwise.
-
 IsOperator 在 token 对应 操作符或者分隔符的时候返回 true 否则返回 false。
 
 <h3 id="Token.Precedence">func (Token) <a href="//github.com/golang/go/blob/2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9/src/go/token/token.go#L249">Precedence</a>
@@ -654,9 +590,6 @@ IsOperator 在 token 对应 操作符或者分隔符的时候返回 true 否则�
 ```
 
 <pre>func (op <a href="#Token">Token</a>) Precedence() <a href="/builtin/#int">int</a></pre>
-
-Precedence returns the operator precedence of the binary operator op. If op is
-not a binary operator, the result is LowestPrecedence.
 
 Precedence 返回二进制操作符 op 的优先级。如果 op 不是一个二进制的操作符返回 LowestPrecedence。
 
@@ -669,11 +602,5 @@ Precedence 返回二进制操作符 op 的优先级。如果 op 不是一个二�
 
 <pre>func (tok <a href="#Token">Token</a>) String() <a href="/builtin/#string">string</a></pre>
 
-String returns the string corresponding to the token tok. For operators,
-delimiters, and keywords the string is the actual token character sequence
-(e.g., for the token ADD, the string is "+"). For all other tokens the string
-corresponds to the token constant name (e.g. for the token IDENT, the string is
-"IDENT").
-
-String 返回 token 对应的字符串。对于操作符，分隔符，关键字，字符串实际上是字符序列。其他的 token 对应的字符串是他们的常量名称。
+String 返回 token 对应的字符串。对于操作符，分隔符，关键字，字符串实际上是字符序列。其他的 token 对应的字符串是他们的标记常量名称。
 
